@@ -74,6 +74,9 @@ SRC_NAME			:=	ft_nm.c							\
 						display.c						\
 						structs.c						\
 						errors.c						\
+						elf64.c							\
+						elf32.c							\
+						elfutils.c						\
 						args.c
 
 

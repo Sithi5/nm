@@ -87,4 +87,10 @@ bool is_elf_file(unsigned char *file_data);
 // errors.c
 void exit_clean(int status, t_nm *nm);
 
+// elf64.c
+void process_elf64_file(t_nm *nm);
+
+// elf32.c
+void process_elf32_file(t_nm *nm);
+
 #endif
