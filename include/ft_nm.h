@@ -57,6 +57,7 @@ typedef struct s_nm
     t_args args;
     int file_count;
     int current_file_index;
+    char *current_filename;
     int fd;
     unsigned char *mapped_data;
     struct stat mapped_data_info;

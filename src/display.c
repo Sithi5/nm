@@ -18,6 +18,6 @@ void display_args(const t_args *args)
 void display_file_error(const char *error_message, t_nm *nm)
 {
     ft_putstrerr(error_message);
-    ft_putstrerr(nm->args.files_names[nm->current_file_index]);
+    ft_putstrerr(nm->current_filename);
     ft_putchar('\n');
 }
