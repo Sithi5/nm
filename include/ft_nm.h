@@ -45,7 +45,7 @@ typedef struct s_args
     bool u_flag;
     bool r_flag;
     bool p_flag;
-    char *files[MAX_FILES];
+    char *files_names[MAX_FILES];
 } t_args;
 
 typedef struct s_nm
@@ -61,6 +61,9 @@ typedef struct s_nm
 /****************************************************************************/
 /*                          FUNCTIONS DEFINITIONS                           */
 /****************************************************************************/
+
+// display.c
+void display_args(const t_args *args);
 
 // args.c
 void parse_args(int argc, char *argv[], t_nm *nm);

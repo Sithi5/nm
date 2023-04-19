@@ -19,18 +19,15 @@ static void add_file(const char *filename, t_nm *nm)
 {
     if (nm->file_count >= MAX_FILES)
     {
-        fprintf(stderr, "%s: Too many files, maximum allowed is %d\n", PROGRAM_NAME, MAX_FILES);
+        ft_putstrerr("Too many files, maximum allowed is ");
+        ft_putnbrerr(MAX_FILES);
         exit(1);
     }
-    nm->args.files[nm->file_count++] = strdup(filename);
+    nm->args.files_names[nm->file_count++] = strdup(filename);
 }
 
 void parse_args(int argc, char *argv[], t_nm *nm)
 {
-    if (argc < 2)
-    {
-        usage();
-    }
     for (int i = 1; i < argc; i++)
     {
         if (ft_strcmp(argv[i], "-h") == 0 || ft_strcmp(argv[i], "--help") == 0)
@@ -61,5 +58,9 @@ void parse_args(int argc, char *argv[], t_nm *nm)
         {
             add_file(argv[i], nm);
         }
+    }
+    if (nm->file_count == 0)
+    {
+        add_file("a.out", nm);
     }
 }
