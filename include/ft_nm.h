@@ -10,7 +10,6 @@
 #include <sys/mman.h> // mmap
 #include <fcntl.h>    // open
 #include <sys/stat.h> // fstat
-#include <errno.h>    // errno
 
 /****************************************************************************/
 /*                          DEFINES                                         */
@@ -35,11 +34,7 @@
 /* Error codes */
 enum e_error
 {
-    ERROR_FAILED_TO_OPEN_FILE,
-    ERROR_FAILED_TO_GET_FILE_INFO,
-    ERROR_FAILED_TO_MAP_FILE,
     ERROR_TOO_MANY_INPUT_FILES,
-    ERROR_NOT_AN_ELF_FILE,
     NB_OF_ERROR_CODES /* Always keep last */
 };
 
@@ -77,6 +72,7 @@ typedef struct s_nm
 
 // display.c
 void display_args(const t_args *args);
+void display_file_error(const char *error_message, t_nm *nm);
 
 // args.c
 void parse_args(int argc, char *argv[], t_nm *nm);

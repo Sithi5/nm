@@ -36,23 +36,30 @@ void process_file(const char *filename, t_nm *nm)
     nm->fd = open(filename, O_RDONLY);
     if (nm->fd < 0)
     {
-        exit_clean(ERROR_FAILED_TO_OPEN_FILE, nm);
+        display_file_error("Failed to open file: ", nm);
+        return;
     }
 
     if (fstat(nm->fd, &(nm->mapped_data_info)) < 0)
     {
-        exit_clean(ERROR_FAILED_TO_GET_FILE_INFO, nm);
+        display_file_error("Failed to get file information: ", nm);
+        close(nm->fd);
+        return;
     }
 
     nm->mapped_data = mmap(NULL, nm->mapped_data_info.st_size, PROT_READ, MAP_PRIVATE, nm->fd, 0);
     if (nm->mapped_data == MAP_FAILED)
     {
-        exit_clean(ERROR_FAILED_TO_MAP_FILE, nm);
+        display_file_error("Failed to map file into memory: ", nm);
+        close(nm->fd);
+        return;
     }
 
     if (!is_elf_file(nm->mapped_data))
     {
-        exit_clean(ERROR_NOT_AN_ELF_FILE, nm);
+        display_file_error("Not an ELF file: ", nm);
+        close(nm->fd);
+        munmap(nm->mapped_data, nm->mapped_data_info.st_size);
         return;
     }
 

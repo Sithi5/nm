@@ -14,3 +14,10 @@ void display_args(const t_args *args)
         printf("  %s\n", args->files_names[i]);
     }
 }
+
+void display_file_error(const char *error_message, t_nm *nm)
+{
+    ft_putstrerr(error_message);
+    ft_putstrerr(nm->args.files_names[nm->current_file_index]);
+    ft_putchar('\n');
+}
