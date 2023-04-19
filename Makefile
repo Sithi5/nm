@@ -72,7 +72,8 @@ endif
 SRC_NAME			:=	ft_nm.c							\
 						utils.c							\
 						display.c						\
-						struct.c						\
+						structs.c						\
+						errors.c						\
 						args.c
 
 

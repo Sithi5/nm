@@ -6,6 +6,11 @@
 /****************************************************************************/
 
 #include "../Libft/includes/libft.h"
+#include <elf.h>      // ELF header
+#include <sys/mman.h> // mmap
+#include <fcntl.h>    // open
+#include <sys/stat.h> // fstat
+#include <errno.h>    // errno
 
 /****************************************************************************/
 /*                          DEFINES                                         */
@@ -30,7 +35,11 @@
 /* Error codes */
 enum e_error
 {
-    ERROR_ARGS,
+    ERROR_FAILED_TO_OPEN_FILE,
+    ERROR_FAILED_TO_GET_FILE_INFO,
+    ERROR_FAILED_TO_MAP_FILE,
+    ERROR_TOO_MANY_INPUT_FILES,
+    ERROR_NOT_AN_ELF_FILE,
     NB_OF_ERROR_CODES /* Always keep last */
 };
 
@@ -52,6 +61,10 @@ typedef struct s_nm
 {
     t_args args;
     int file_count;
+    int current_file_index;
+    int fd;
+    unsigned char *mapped_data;
+    struct stat mapped_data_info;
 } t_nm;
 
 /****************************************************************************/
@@ -70,5 +83,11 @@ void parse_args(int argc, char *argv[], t_nm *nm);
 
 // struct.c
 void set_nm_structure(t_nm *nm);
+
+// utils.c
+bool is_elf_file(unsigned char *file_data);
+
+// errors.c
+void exit_clean(int status, t_nm *nm);
 
 #endif
