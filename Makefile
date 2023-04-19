@@ -149,6 +149,19 @@ help:
 	@echo "$(_YELLOW)   make help                           prints this message                $(_END)"
 
 
+docker-build:
+	docker build -t nm-image-v1.0 ./docker/.
+
+docker-run:
+	docker run -it --name nm-container-1 -v `pwd`:/shared nm-image-v1.0
+
+docker-exec:
+	docker exec -it nm-container-1 bash
+
+docker-start:
+	docker start nm-container-1
+
+
 $(ART_NAME):
 	@touch $(ART_NAME)
 	@echo "$(_CYAN)" > $(ART_NAME)
@@ -170,7 +183,7 @@ $(ART_NAME):
 	@echo "$(_END)" >> $(ART_NAME)
 	@cat $(ART_NAME)
 
-.PHONY: all clean fclean re check help tests
+.PHONY: all clean fclean re check help tests docker-build docker-run docker-exec docker-start
 
 ################################################################################
 #                                    FORMAT                                    #
