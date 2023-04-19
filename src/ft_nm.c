@@ -2,6 +2,10 @@
 
 int main(int argc, char *argv[])
 {
-    miniprintf("Hello World!\n");
+    t_nm nm;
+
+    ft_bzero(&nm, sizeof(t_nm));
+    set_nm_structure(&nm);
+    parse_args(argc, argv, &nm);
     return 0;
 }
