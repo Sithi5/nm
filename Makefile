@@ -70,11 +70,15 @@ endif
 ################################################################################
 
 SRC_NAME			:=	ft_nm.c							\
+						utils.c							\
+						args.c
 
 
 INCLUDE_NAME		:=	ft_nm.h
 
 TESTS_SRC_NAME		:= 	./tests/test*.sh					\
+
+LIBFT_NAME			=	libft.a
 
 ################################################################################
 #                                     PATH                                     #
@@ -85,6 +89,8 @@ SRC_PATH			:=	./src/
 OBJ_PATH 			:=	./obj/
 
 INCLUDE_PATH		:=	./include/
+
+LIBFT_PATH			=	./Libft/
 
 ################################################################################
 #                                 NAME + PATH                                  #
@@ -103,12 +109,16 @@ INCLUDE				:=	$(addprefix $(INCLUDE_PATH), $(INCLUDE_NAME))
 
 all: $(ART_NAME) $(NAME)
 
-$(NAME): $(OBJ)
+$(LIBFT_PATH)$(LIBFT_NAME):
+	@make -C $(LIBFT_PATH) -j
+	@echo ""
+
+$(NAME): $(LIBFT_PATH)$(LIBFT_NAME) $(OBJ)
 	@echo "\n$(NAME) : $(GEN)"
 	@echo "\n$(_CYAN)====================================================$(_END)"
 	@echo "$(_YELLOW)		COMPILING $(NAME)$(_END)"
 	@echo "$(_CYAN)====================================================$(_END)"
-	@$(CC) -o $(NAME) $(OBJ)
+	@$(CC) -o $(NAME) $(OBJ) $(LIBFT_PATH)/$(LIBFT_NAME)
 	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 	@echo "\n"
 
