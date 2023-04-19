@@ -2,7 +2,7 @@
 
 void usage()
 {
-    printf("Usage: %s [options] <object files>\n\n", PROGRAM_NAME);
+    ft_printf("Usage: %s [options] <object files>\n\n", PROGRAM_NAME);
     exit(1);
 }
 

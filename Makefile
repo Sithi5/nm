@@ -21,7 +21,7 @@ DEBUG				:=	no
 O2					:=	no
 
 CC					:= gcc
-GEN					:= Generation in mode
+GEN					:= Generated in mode
 
 ifeq ($(WALL), yes)
 	CC				+=	-Wall
@@ -59,7 +59,7 @@ ifeq ($(O2),yes)
 	GEN				+=	O2
 endif
 
-ifeq ($(GEN), Generation in mode)
+ifeq ($(GEN), Generated in mode)
 	GEN				+=	no flags
 endif
 
@@ -139,12 +139,12 @@ clean:
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(OBJ_PATH)"$(_END)"
 	@rm -f $(ART_NAME)
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(ART_NAME)"$(_END)"
-
+	@make -C $(LIBFT_PATH) clean
 
 fclean: clean
 	@rm -f $(NAME)
-	@echo "$(_YELLOW)Remove :\t$(_RED)" $(NAME)
-	@echo "$(_END)"
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(NAME)"$(_END)"
+	@make -C $(LIBFT_PATH) fclean
 
 re: fclean all
 

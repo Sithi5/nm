@@ -56,3 +56,6 @@ bird
 
 # Macos
 .DS_Store
+
+# binary
+ft_nm
