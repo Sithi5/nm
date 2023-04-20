@@ -122,7 +122,7 @@ void process_elf64_file(t_nm *nm);
 void process_elf32_file(t_nm *nm);
 
 // elfutils.c
-char get_symbol_type_char(t_nm *nm, void *symbol, void *section_headers);
+char get_symbol_type_char(t_nm *nm, void *symbol);
 bool should_display_symbol(void *sym_ptr, const t_nm *nm);
 
 #endif

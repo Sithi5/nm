@@ -57,10 +57,10 @@ bool should_display_symbol(void *sym_ptr, const t_nm *nm)
     return false;
 }
 
-static char get_symbol_type_char64(Elf64_Sym *symbol, Elf64_Shdr *section_headers)
+static char get_symbol_type_char64(const t_nm *nm, Elf64_Sym *symbol)
 {
     unsigned char bind = ELF64_ST_BIND(symbol->st_info);
-    Elf64_Shdr *section_header = &section_headers[symbol->st_shndx];
+    Elf64_Shdr *section_header = &(nm->elf64_data.section_headers[symbol->st_shndx]);
 
     if (symbol->st_shndx == SHN_UNDEF)
         return 'U';
@@ -81,11 +81,10 @@ static char get_symbol_type_char64(Elf64_Sym *symbol, Elf64_Shdr *section_header
     return '?';
 }
 
-static char get_symbol_type_char32(Elf32_Sym *symbol, Elf32_Shdr *section_headers)
+static char get_symbol_type_char32(const t_nm *nm, Elf32_Sym *symbol)
 {
     unsigned char bind = ELF32_ST_BIND(symbol->st_info);
-    unsigned char type = ELF32_ST_TYPE(symbol->st_info);
-    Elf32_Shdr *section_header = &section_headers[symbol->st_shndx];
+    Elf32_Shdr *section_header = &(nm->elf32_data.section_headers[symbol->st_shndx]);
 
     if (symbol->st_shndx == SHN_UNDEF)
         return 'U';
@@ -106,12 +105,12 @@ static char get_symbol_type_char32(Elf32_Sym *symbol, Elf32_Shdr *section_header
     return '?';
 }
 
-char get_symbol_type_char(t_nm *nm, void *symbol, void *section_headers)
+char get_symbol_type_char(t_nm *nm, void *symbol)
 {
     if (nm->elf_class == ELFCLASS32)
-        return get_symbol_type_char32(nm->elf32_data.symbols, nm->elf32_data.section_headers);
+        return get_symbol_type_char32(nm, symbol);
     else if (nm->elf_class == ELFCLASS64)
-        return get_symbol_type_char64(nm->elf64_data.symbols, nm->elf64_data.section_headers);
+        return get_symbol_type_char64(nm, symbol);
     else
         return '?';
 }

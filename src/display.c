@@ -24,14 +24,14 @@ void display_file_error(const char *error_message, t_nm *nm)
 
 static void display_symbol32(t_nm *nm, Elf64_Sym *symbol)
 {
-    char symbol_type = get_symbol_type_char(nm, symbol, nm->elf32_data.section_headers);
+    char symbol_type = get_symbol_type_char(nm, symbol);
     char *symbol_name = (char *)(nm->mapped_data + nm->elf32_data.strtab_section->sh_offset + symbol->st_name);
     ft_printf("%08x %c %s\n", (unsigned)symbol->st_value, symbol_type, symbol_name);
 }
 
 static void display_symbol64(t_nm *nm, Elf64_Sym *symbol)
 {
-    char symbol_type = get_symbol_type_char(nm, symbol, nm->elf64_data.section_headers);
+    char symbol_type = get_symbol_type_char(nm, symbol);
     char *symbol_name = (char *)(nm->mapped_data + nm->elf64_data.strtab_section->sh_offset + symbol->st_name);
     ft_printf("%016lx %c %s\n", (unsigned long)symbol->st_value, symbol_type, symbol_name);
 }
