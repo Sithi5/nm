@@ -19,12 +19,6 @@
 #define PROGRAM_VERSION "1.0.0"
 #define PROGRAM_AUTHOR "mabouce"
 
-#ifdef DEBUG
-#define DEBUG true
-#else
-#define DEBUG false
-#endif
-
 #define MAX_FILES 256
 
 /****************************************************************************/
@@ -99,8 +93,6 @@ typedef struct s_nm
 /****************************************************************************/
 
 // display.c
-void display_args(const t_args *args);
-void display_file_error(const char *error_message, t_nm *nm);
 void display_symbol(t_nm *nm, void *symbol);
 
 // args.c
@@ -111,9 +103,6 @@ void set_nm_structure(t_nm *nm);
 
 // utils.c
 bool is_elf_file(unsigned char *file_data);
-
-// errors.c
-void exit_clean(int status, t_nm *nm);
 
 // elf64.c
 void process_elf64_file(t_nm *nm);

@@ -16,7 +16,7 @@ void process_elf_file(t_nm *nm)
     }
     else
     {
-        display_file_error("Unknown ELF class: ", nm);
+        ft_dprintf(STDERR_FILENO, "%s: %s: Unknown ELF class\n", PROGRAM_NAME, nm->current_filename);
     }
 }
 
@@ -25,13 +25,13 @@ void process_file(t_nm *nm)
     nm->fd = open(nm->current_filename, O_RDONLY);
     if (nm->fd < 0)
     {
-        display_file_error("Failed to open file: ", nm);
+        ft_dprintf(STDERR_FILENO, "%s: %s: Failed to open file\n", PROGRAM_NAME, nm->current_filename);
         return;
     }
 
     if (fstat(nm->fd, &(nm->mapped_data_info)) < 0)
     {
-        display_file_error("Failed to get file information: ", nm);
+        ft_dprintf(STDERR_FILENO, "%s: %s: Failed to get file information\n", PROGRAM_NAME, nm->current_filename);
         close(nm->fd);
         return;
     }
@@ -40,14 +40,14 @@ void process_file(t_nm *nm)
 
     if (nm->mapped_data == MAP_FAILED)
     {
-        display_file_error("Failed to map file into memory: ", nm);
+        ft_dprintf(STDERR_FILENO, "%s: %s: Failed to map file into memory\n", PROGRAM_NAME, nm->current_filename);
         close(nm->fd);
         return;
     }
 
     if (!is_elf_file(nm->mapped_data))
     {
-        display_file_error("Not an ELF file: ", nm);
+        ft_dprintf(STDERR_FILENO, "%s: %s: Not an ELF file\n", PROGRAM_NAME, nm->current_filename);
         close(nm->fd);
         munmap(nm->mapped_data, nm->mapped_data_info.st_size);
         return;

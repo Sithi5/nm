@@ -50,9 +50,14 @@ void process_elf64_file(t_nm *nm)
         }
     }
 
-    if (!nm->elf64_data.symtab_section || !nm->elf64_data.strtab_section)
+    if (!nm->elf64_data.symtab_section)
     {
-        display_file_error("Failed to find symbol table or string table in: ", nm);
+        ft_dprintf(STDERR_FILENO, "%s: %s: no symbols\n", PROGRAM_NAME, nm->current_filename);
+        return;
+    }
+    if (!nm->elf64_data.strtab_section)
+    {
+        ft_dprintf(STDERR_FILENO, "%s: %s: Failed to find string table\n", PROGRAM_NAME, nm->current_filename);
         return;
     }
 
@@ -65,9 +70,17 @@ void process_elf64_file(t_nm *nm)
 
     for (size_t i = 0; i < nm->elf64_data.symtab_entry_count; i++)
     {
+        Elf64_Sym *symbol = &(nm->elf64_data.symbols)[i];
+        char *symbol_name = (char *)(nm->mapped_data + nm->elf64_data.strtab_section->sh_offset + symbol->st_name);
+
+        if (symbol_name == NULL || symbol_name[0] == '\0' || symbol_name[0] == '/')
+        {
+            continue;
+        }
+
         if (should_display_symbol((void *)&(nm->elf64_data.symbols[i]), nm))
         {
-            display_symbol(nm, &(nm->elf64_data.symbols)[i]);
+            display_symbol(nm, symbol);
         }
     }
 }

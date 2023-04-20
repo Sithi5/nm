@@ -19,7 +19,8 @@ static void add_file(const char *filename, t_nm *nm)
 {
     if (nm->file_count >= MAX_FILES)
     {
-        exit_clean(ERROR_TOO_MANY_INPUT_FILES, nm);
+        ft_dprintf(STDERR_FILENO, "%s: %s: Too many files, maximum allowed is %d\n", PROGRAM_NAME, nm->current_filename, MAX_FILES);
+        exit(ERROR_TOO_MANY_INPUT_FILES);
     }
     nm->args.files_names[nm->file_count++] = strdup(filename);
 }

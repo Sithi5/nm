@@ -73,7 +73,6 @@ SRC_NAME			:=	ft_nm.c							\
 						utils.c							\
 						display.c						\
 						structs.c						\
-						errors.c						\
 						elf64.c							\
 						elf32.c							\
 						elfutils.c						\
