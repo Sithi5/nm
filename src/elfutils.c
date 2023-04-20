@@ -60,7 +60,6 @@ bool should_display_symbol(void *sym_ptr, const t_nm *nm)
 static char get_symbol_type_char64(Elf64_Sym *symbol, Elf64_Shdr *section_headers)
 {
     unsigned char bind = ELF64_ST_BIND(symbol->st_info);
-    unsigned char type = ELF64_ST_TYPE(symbol->st_info);
     Elf64_Shdr *section_header = &section_headers[symbol->st_shndx];
 
     if (symbol->st_shndx == SHN_UNDEF)

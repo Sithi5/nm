@@ -13,8 +13,6 @@ void sort_symbols64(t_nm *nm)
 {
     bool swapped;
 
-    DEBUG ? printf("SORT_SYMBOLS64\n\n") : 0;
-
     for (size_t i = 0; i < nm->elf64_data.symtab_entry_count - 1; i++)
     {
         swapped = false;
@@ -69,7 +67,7 @@ void process_elf64_file(t_nm *nm)
     {
         if (should_display_symbol((void *)&(nm->elf64_data.symbols[i]), nm))
         {
-            display_symbol(nm, &(nm->elf64_data.symbols)[i], nm->elf64_data.section_headers, nm->elf64_data.strtab_section);
+            display_symbol(nm, &(nm->elf64_data.symbols)[i]);
         }
     }
 }

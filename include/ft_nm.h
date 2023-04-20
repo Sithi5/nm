@@ -101,7 +101,7 @@ typedef struct s_nm
 // display.c
 void display_args(const t_args *args);
 void display_file_error(const char *error_message, t_nm *nm);
-void display_symbol(t_nm *nm, void *symbol, void *section_headers, char *strings_table);
+void display_symbol(t_nm *nm, void *symbol);
 
 // args.c
 void parse_args(int argc, char *argv[], t_nm *nm);
