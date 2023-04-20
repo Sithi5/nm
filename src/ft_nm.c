@@ -6,10 +6,12 @@ void process_elf_file(t_nm *nm)
 
     if (elf_header->e_ident[EI_CLASS] == ELFCLASS32)
     {
+        nm->elf_class = ELFCLASS32;
         process_elf32_file(nm);
     }
     else if (elf_header->e_ident[EI_CLASS] == ELFCLASS64)
     {
+        nm->elf_class = ELFCLASS64;
         process_elf64_file(nm);
     }
     else
@@ -34,7 +36,8 @@ void process_file(t_nm *nm)
         return;
     }
 
-    nm->mapped_data = mmap(NULL, nm->mapped_data_info.st_size, PROT_READ, MAP_PRIVATE, nm->fd, 0);
+    nm->mapped_data = mmap(NULL, nm->mapped_data_info.st_size, PROT_READ | PROT_WRITE, MAP_PRIVATE, nm->fd, 0);
+
     if (nm->mapped_data == MAP_FAILED)
     {
         display_file_error("Failed to map file into memory: ", nm);

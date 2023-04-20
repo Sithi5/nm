@@ -17,7 +17,7 @@ WEXTRA				:=	yes
 WSHADOW				:=	yes
 WERROR				:=	no
 FSANITIZE			:=	no
-DEBUG				:=	no
+DEBUG				:=	yes
 O2					:=	no
 
 CC					:= gcc
@@ -135,10 +135,11 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INCLUDE)
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
 tests: all
-	@echo "\n$(_CYAN)====================================================$(_END)"
+	@echo "$(_CYAN)====================================================$(_END)"
 	@echo "$(_YELLOW)		LAUNCHING TESTS$(_END)"
 	@echo "$(_CYAN)====================================================$(_END)"
-	@for f in $(TESTS_SRC_NAME);  do sh $${f}; done;
+	@cp $(NAME) ./tests/
+	@cd ./tests && ./run_tests.sh
 
 clean:
 	@rm -rf $(OBJ_PATH) 2> /dev/null || true

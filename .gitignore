@@ -59,3 +59,8 @@ bird
 
 # binary
 ft_nm
+
+todo*
+
+# Tests
+tests/*.out

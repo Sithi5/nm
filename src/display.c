@@ -21,3 +21,23 @@ void display_file_error(const char *error_message, t_nm *nm)
     ft_putstrerr(nm->current_filename);
     ft_putchar('\n');
 }
+
+static void display_symbol32(t_nm *nm, Elf32_Sym *symbol, Elf32_Shdr *section_headers, char *strings_table)
+{
+    char symbol_type = get_symbol_type_char(nm, symbol, section_headers);
+    ft_printf("%08x %c %s\n", (unsigned)symbol->st_value, symbol_type, &strings_table[symbol->st_name]);
+}
+
+static void display_symbol64(t_nm *nm, Elf64_Sym *symbol, Elf64_Shdr *section_headers, char *strings_table)
+{
+    char symbol_type = get_symbol_type_char(nm, symbol, section_headers);
+    ft_printf("%016lx %c %s\n", (unsigned long)symbol->st_value, symbol_type, &strings_table[symbol->st_name]);
+}
+
+void display_symbol(t_nm *nm, void *symbol, void *section_headers, char *strings_table)
+{
+    if (nm->elf_class == ELFCLASS32)
+        display_symbol32(nm, (Elf32_Sym *)symbol, (Elf32_Shdr *)section_headers, strings_table);
+    else if (nm->elf_class == ELFCLASS64)
+        display_symbol64(nm, (Elf64_Sym *)symbol, (Elf64_Shdr *)section_headers, strings_table);
+}
