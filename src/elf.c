@@ -74,11 +74,6 @@ static void process_symbols(t_nm *nm) {
                 (char *) (nm->mapped_data + nm->elf_data.strtab_section.elf32->sh_offset +
                           nm->elf_data.current_symbol.elf32->st_name);
         }
-        if (nm->elf_data.current_symbol_name == NULL ||
-            nm->elf_data.current_symbol_name[0] == '\0' ||
-            nm->elf_data.current_symbol_name[0] == '/') {
-            continue;
-        }
 
         if (should_display_symbol(nm)) {
             display_current_symbol(nm);
