@@ -12,4 +12,5 @@ void set_nm_structure(t_nm *nm)
     ft_bzero(nm->args.files_names, sizeof(nm->args.files_names));
     ft_bzero(&(nm->mapped_data_info), sizeof(nm->mapped_data_info));
     ft_bzero(&(nm->mapped_data), sizeof(nm->mapped_data));
+    ft_bzero(&(nm->elf_data), sizeof(nm->elf_data));
 }

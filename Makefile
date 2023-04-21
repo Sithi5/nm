@@ -73,9 +73,9 @@ SRC_NAME			:=	ft_nm.c							\
 						utils.c							\
 						display.c						\
 						structs.c						\
-						elf64.c							\
-						elf32.c							\
+						elf.c							\
 						elfutils.c						\
+						sort.c							\
 						args.c
 
 
