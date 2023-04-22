@@ -16,10 +16,12 @@ void set_nm_structure(t_nm *nm) {
     nm->elf_data.elf_header.elf64 = NULL;
     nm->elf_data.section_headers.elf32 = NULL;
     nm->elf_data.section_headers.elf64 = NULL;
-    nm->elf_data.symtab_section.elf32 = NULL;
-    nm->elf_data.symtab_section.elf64 = NULL;
-    nm->elf_data.strtab_section.elf32 = NULL;
-    nm->elf_data.strtab_section.elf64 = NULL;
+    nm->elf_data.symbols_tab_section.elf32 = NULL;
+    nm->elf_data.symbols_tab_section.elf64 = NULL;
+    nm->elf_data.symbols_strtab_section.elf32 = NULL;
+    nm->elf_data.symbols_strtab_section.elf64 = NULL;
+    nm->elf_data.sections_strtab_section.elf32 = NULL;
+    nm->elf_data.sections_strtab_section.elf64 = NULL;
     nm->elf_data.symbols.elf32 = NULL;
     nm->elf_data.symbols.elf64 = NULL;
     nm->elf_data.current_symbol.elf32 = NULL;

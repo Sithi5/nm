@@ -1,24 +1,14 @@
 
 #include "ft_nm.h"
 
-static char *get_symbol_name_from_index(t_nm *nm, size_t index) {
-    if (nm->elf_data.elf_class == ELFCLASS64) {
-        return (char *) (nm->mapped_data + nm->elf_data.strtab_section.elf64->sh_offset +
-                         nm->elf_data.symbols.elf64[index].st_name);
-    } else if (nm->elf_data.elf_class == ELFCLASS32) {
-        return (char *) (nm->mapped_data + nm->elf_data.strtab_section.elf32->sh_offset +
-                         nm->elf_data.symbols.elf32[index].st_name);
-    }
-    return NULL;
-}
-
 void sort_symbols(t_nm *nm) {
+    DEBUG ? ft_printf("DEBUG: sort_symbols()\n") : 0;
     bool swapped;
     int comparison = 0;
 
-    for (size_t i = 0; i < nm->elf_data.symtab_entry_count - 1; i++) {
+    for (size_t i = 0; i < nm->elf_data.symbols_tab_entry_count - 1; i++) {
         swapped = false;
-        for (size_t j = 0; j < nm->elf_data.symtab_entry_count - 1; j++) {
+        for (size_t j = 0; j < nm->elf_data.symbols_tab_entry_count - 1; j++) {
             comparison =
                 ft_strcmp(get_symbol_name_from_index(nm, j), get_symbol_name_from_index(nm, j + 1));
 

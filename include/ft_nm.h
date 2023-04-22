@@ -19,6 +19,12 @@
 #define PROGRAM_VERSION "1.0.0"
 #define PROGRAM_AUTHOR  "mabouce"
 
+#ifdef DEBUG_MODE
+#define DEBUG true
+#else
+#define DEBUG false
+#endif
+
 #define MAX_FILES 256
 
 /****************************************************************************/
@@ -68,11 +74,12 @@ typedef struct s_args {
 typedef struct s_elf_data {
     t_elf_header elf_header;
     t_section section_headers;
-    t_section symtab_section;
-    t_section strtab_section;
-    size_t symtab_size;
-    size_t symtab_entry_size;
-    size_t symtab_entry_count;
+    t_section symbols_tab_section;
+    t_section symbols_strtab_section;
+    t_section sections_strtab_section;
+    size_t symbols_tab_size;
+    size_t symbols_tab_entry_size;
+    size_t symbols_tab_entry_count;
     t_symbol symbols;
     t_symbol current_symbol;
     char *current_symbol_name;
@@ -118,9 +125,10 @@ void process_elf32_file(t_nm *nm);
 
 // elfutils.c
 char get_current_symbol_type_char(t_nm *nm);
-bool should_display_symbol(const t_nm *nm);
+bool should_display_symbol(t_nm *nm);
 void swap_symbols_index(t_nm *nm, size_t symbol_index_1, size_t symbol_index_2);
 char *get_symbol_name_in_strtab_section(t_nm *nm, t_symbol symbol);
+char *get_symbol_name_from_index(t_nm *nm, size_t symbol_index);
 
 // sort.c
 void sort_symbols(t_nm *nm);
