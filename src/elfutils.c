@@ -59,8 +59,8 @@ bool should_display_symbol(t_nm *nm) {
                       nm->elf_data.current_symbol_name, type, bind, shndx)
           : 0;
 
-    // Skip certain symbol types
-    if (type == STT_NOTYPE) {
+    // Skip compiler generated symbols
+    if (ft_strncmp(nm->elf_data.current_symbol_name, "$", 1) == 0 || shndx == SHN_UNDEF) {
         DEBUG ? ft_printf("SKIPPED\n") : 0;
         return false;
     }

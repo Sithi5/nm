@@ -84,7 +84,7 @@ static void process_symbols(t_nm *nm) {
         nm->elf_data.current_symbol_name = get_symbol_name_from_index(nm, i);
 
         if (should_display_symbol(nm)) {
-            display_current_symbol(nm);
+            // display_current_symbol(nm);
         }
     }
 }
