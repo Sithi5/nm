@@ -114,6 +114,8 @@ void process_elf_file(t_nm *nm) {
 
     set_elf_data_symbols(nm);
 
-    sort_symbols(nm);
+    if (!nm->args.p_flag) {
+        sort_symbols(nm);
+    }
     process_symbols(nm);
 }
