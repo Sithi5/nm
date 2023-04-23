@@ -74,9 +74,9 @@ typedef struct s_args {
 typedef struct s_elf_data {
     t_elf_header elf_header;
     t_section section_headers;
-    t_section symbols_tab_section;
-    t_section symbols_strtab_section;
-    t_section sections_strtab_section;
+    t_section symtab_section;
+    t_section symtab_strtab_section;
+    t_section sh_strtab_section;
     size_t symbols_tab_size;
     size_t symbols_tab_entry_size;
     size_t symbols_tab_entry_count;

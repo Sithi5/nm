@@ -9,24 +9,20 @@ char *get_symbol_name_from_index(t_nm *nm, size_t symbol_index) {
         if (ELF64_ST_TYPE(nm->elf_data.symbols.elf64[symbol_index].st_info == STT_SECTION)) {
             shndx = nm->elf_data.symbols.elf64[symbol_index].st_shndx;
             shdr64 = &nm->elf_data.section_headers.elf64[shndx];
-            return (char *) (nm->mapped_data +
-                             nm->elf_data.sections_strtab_section.elf64->sh_offset +
+            return (char *) (nm->mapped_data + nm->elf_data.sh_strtab_section.elf64->sh_offset +
                              shdr64->sh_name);
         } else {
-            return (char *) (nm->mapped_data +
-                             nm->elf_data.symbols_strtab_section.elf64->sh_offset +
+            return (char *) (nm->mapped_data + nm->elf_data.symtab_strtab_section.elf64->sh_offset +
                              nm->elf_data.symbols.elf64[symbol_index].st_name);
         }
     } else if (nm->elf_data.elf_class == ELFCLASS32) {
         if (ELF32_ST_TYPE(nm->elf_data.symbols.elf32[symbol_index].st_info == STT_SECTION)) {
             shndx = nm->elf_data.symbols.elf32[symbol_index].st_shndx;
             shdr32 = &nm->elf_data.section_headers.elf32[shndx];
-            return (char *) (nm->mapped_data +
-                             nm->elf_data.sections_strtab_section.elf32->sh_offset +
+            return (char *) (nm->mapped_data + nm->elf_data.sh_strtab_section.elf32->sh_offset +
                              shdr32->sh_name);
         } else {
-            return (char *) (nm->mapped_data +
-                             nm->elf_data.symbols_strtab_section.elf32->sh_offset +
+            return (char *) (nm->mapped_data + nm->elf_data.symtab_strtab_section.elf32->sh_offset +
                              nm->elf_data.symbols.elf64[symbol_index].st_name);
         }
     } else {
