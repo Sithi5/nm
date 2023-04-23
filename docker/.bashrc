@@ -35,4 +35,4 @@ parse_git_branch() {
 }
 
 # Set the prompt
-PS1="${COLOR_GREEN}Container: ${COLOR_WHITE}\u@\h in ${COLOR_YELLOW}\w ${COLOR_CYAN}\$(parse_git_branch)${COLOR_RESET} $ "
+PS1="${COLOR_GREEN}nm-container-1: ${COLOR_WHITE}\u@\h in ${COLOR_YELLOW}\w ${COLOR_CYAN}\$(parse_git_branch)${COLOR_RESET} $ "
