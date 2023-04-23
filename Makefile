@@ -17,7 +17,7 @@ WEXTRA				:=	yes
 WSHADOW				:=	yes
 WERROR				:=	no
 FSANITIZE			:=	no
-DEBUG				:=	yes
+DEBUG				:=	no
 O2					:=	no
 
 CC					:= gcc

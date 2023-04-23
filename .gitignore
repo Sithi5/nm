@@ -64,3 +64,5 @@ todo*
 
 # Tests
 tests/*.out
+tests/*.txt
+!tests/*.so

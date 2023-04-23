@@ -60,7 +60,8 @@ bool should_display_symbol(t_nm *nm) {
           : 0;
 
     // Skip compiler generated symbols
-    if (ft_strncmp(nm->elf_data.current_symbol_name, "$", 1) == 0 || shndx == SHN_UNDEF) {
+    if (ft_strncmp(nm->elf_data.current_symbol_name, "$", 1) == 0 ||
+        (nm->elf_data.current_symbol_name[0] == '\0' && shndx == SHN_UNDEF)) {
         DEBUG ? ft_printf("SKIPPED\n") : 0;
         return false;
     }
