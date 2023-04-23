@@ -1,19 +1,23 @@
 #!/bin/sh
 
-TEST_ALL=1
+# Tests configuration
+VERBOSE=1
+
+# Activate or deactivate tests
+TEST_ALL=0
 TEST_ELF64_SYMBOLS_COUNT=1
 TEST_ELF32_SYMBOLS_COUNT=1
 TEST_ERRORS_MISC=0
 TEST_ERRORS_FILE_TYPE=0
 TEST_ELF64=0
-TEST_DISPLAY_KO=0
+
+# Colors
 
 _GREEN=`tput setaf 2`
 _YELLOW=`tput setaf 3`
 _RED=`tput setaf 1`
 _PURPLE=`tput setaf 5`
 _END=`tput sgr0`
-
 
 # echo filename
 echo "\n\n\n\n${_PURPLE}$0 :${_END}\n"
@@ -31,13 +35,40 @@ compare_nm_and_ft_nm_symbols_count() {
         echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
     else
         echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
+        if [ "$VERBOSE" -eq 1 ]; then
             echo "${_YELLOW}--- nm output:${_END}"
             echo "$nm_line_count"
             echo "${_YELLOW}--- ft_nm output:${_END}"
             echo "$ft_nm_line_count"
             echo "${_YELLOW}--- diff:${_END}"
             echo "$(($nm_line_count - $ft_nm_line_count))"
+        fi
+    fi
+}
+
+compare_nm_and_ft_nm_output() {
+    test_name=$1
+    test_number=$2
+    prog=$3
+    options=$4
+
+    nm_output=$(nm "$prog" $options)
+    ft_nm_output=$(./ft_nm "$prog" $options)
+    if [ "$nm_output" = "$ft_nm_output" ]
+    then
+        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
+    else
+        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
+        if [ "$VERBOSE" -eq 1 ]; then
+            echo "${_YELLOW}--- nm output:${_END}"
+            echo "$nm_output"
+            echo "$nm_output" > nm_output.txt
+            echo "${_YELLOW}--- ft_nm output:${_END}"
+            echo "$ft_nm_output"
+            echo "$ft_nm_output" > ft_nm_output.txt
+            echo "${_YELLOW}--- diff:${_END}"
+            diff nm_output.txt ft_nm_output.txt
+            rm nm_output.txt ft_nm_output.txt
         fi
     fi
 }
@@ -53,7 +84,7 @@ compare_ft_nm_error_with_expected_output() {
         echo "${_GREEN}[${test_number}] ${test_name}: -> OK${_END}"
     else
         echo "${_RED}[${test_number}] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
+        if [ "$VERBOSE" -eq 1 ]; then
             echo "${_YELLOW}--- expected output:${_END}"
             echo "$expected_output"
             echo "${_YELLOW}--- ft_nm output:${_END}"
@@ -104,7 +135,7 @@ test_elf32_symbols_count()
 	echo "\n${_YELLOW}${test_name}:${_END}\n"
 
 
-  test_number=1
+    test_number=1
     compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value_32 ""
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./my_simple_lib_32.so ""
@@ -133,7 +164,7 @@ test_errors_misc()
         echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
     else
         echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
+        if [ "$VERBOSE" -eq 1 ]; then
             echo "${_YELLOW}--- nm output:${_END}"
             cat nm_stderr.txt
             echo "${_YELLOW}--- ft_nm output:${_END}"
@@ -166,17 +197,11 @@ test_errors_file_type()
 
 test_elf64()
 {
-	echo "\n${_GREEN}test_elf64:${_END}\n"
+    test_name="test_elf64 with -a option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
 
-    ./ft_nm ft_nm > ft_nm.out
-    nm ft_nm > nm.out
-
-    if diff -q ft_nm.out nm.out >/dev/null 2>&1
-    then
-        echo "${_GREEN}test_elf64 OK${_END}"
-    else
-        echo "${_RED}test_elf64 KO${_END}"
-    fi
+    test_number=1
+    compare_nm_and_ft_nm_output  "simple binary file" $test_number ./absolute_value_32 "-a"
 }
 
 if [ $TEST_ELF64_SYMBOLS_COUNT -eq 1 ]|| [ "$TEST_ALL" -eq 1 ]
