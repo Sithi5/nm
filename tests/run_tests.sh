@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TEST_ALL=0
+TEST_ALL=1
 TEST_ELF64_SYMBOLS_COUNT=1
 TEST_ELF32_SYMBOLS_COUNT=1
 TEST_ERRORS_MISC=0
@@ -18,249 +18,99 @@ _END=`tput sgr0`
 # echo filename
 echo "\n\n\n\n${_PURPLE}$0 :${_END}\n"
 
+compare_nm_and_ft_nm_symbols_count() {
+    test_name=$1
+    test_number=$2
+    prog=$3
+    options=$4
+
+    nm_line_count=$(nm "$prog" $options | wc -l)
+    ft_nm_line_count=$(./ft_nm "$prog" $options | wc -l)
+    if [ "$nm_line_count" -eq "$ft_nm_line_count" ]
+    then
+        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
+    else
+        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
+        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
+            echo "${_YELLOW}--- nm output:${_END}"
+            echo "$nm_line_count"
+            echo "${_YELLOW}--- ft_nm output:${_END}"
+            echo "$ft_nm_line_count"
+            echo "${_YELLOW}--- diff:${_END}"
+            echo "$(($nm_line_count - $ft_nm_line_count))"
+        fi
+    fi
+}
+
+compare_ft_nm_error_with_expected_output() {
+    test_name=$1
+    test_number=$2
+    prog=$3
+    expected_output=$4
+
+    ft_nm_stderr=$(./ft_nm "$prog" 2>&1)
+    if [ "$ft_nm_stderr" = "$expected_output" ]; then
+        echo "${_GREEN}[${test_number}] ${test_name}: -> OK${_END}"
+    else
+        echo "${_RED}[${test_number}] ${test_name}: -> KO${_END}"
+        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
+            echo "${_YELLOW}--- expected output:${_END}"
+            echo "$expected_output"
+            echo "${_YELLOW}--- ft_nm output:${_END}"
+            echo "$ft_nm_stderr"
+        fi
+    fi
+}
+
 
 test_elf64_symbols_count()
 {
     test_name="test_elf64_symbols_count with -a option"
-	echo "\n${_YELLOW}${test_name}:${_END}\n"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
 
     test_number=1
-    test_name="simple binary file"
-    prog=./absolute_value
-    nm_line_count=$(nm "$prog" -a | wc -l)
-    ft_nm_line_count=$(./ft_nm "$prog" -a | wc -l)
-    if [ "$nm_line_count" -eq "$ft_nm_line_count" ]
-    then
-        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
-    else
-        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- nm output:${_END}"
-            echo "$nm_line_count"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_line_count"
-            echo "${_YELLOW}--- diff:${_END}"
-            echo "$(($nm_line_count - $ft_nm_line_count))"
-        fi
-    fi
-
+    compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value "-a"
     test_number=$((test_number + 1))
-    test_name=".so file"
-    prog=./libft_malloc_aarch64_Linux.so
-    nm_line_count=$(nm "$prog" -a | wc -l)
-    ft_nm_line_count=$(./ft_nm "$prog" -a | wc -l)
-    if [ "$nm_line_count" -eq "$ft_nm_line_count" ]
-    then
-        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
-    else
-        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- nm output:${_END}"
-            echo "$nm_line_count"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_line_count"
-            echo "${_YELLOW}--- diff:${_END}"
-            echo "$(($nm_line_count - $ft_nm_line_count))"
-        fi
-    fi
-
+    compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./libft_malloc_aarch64_Linux.so "-a"
     test_number=$((test_number + 1))
-    test_name=".o file"
-    prog=./absolute_value.o
-    nm_line_count=$(nm "$prog" -a | wc -l)
-    ft_nm_line_count=$(./ft_nm "$prog" -a | wc -l)
-    if [ "$nm_line_count" -eq "$ft_nm_line_count" ]
-    then
-        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
-    else
-        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- nm output:${_END}"
-            echo "$nm_line_count"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_line_count"
-            echo "${_YELLOW}--- diff:${_END}"
-            echo "$(($nm_line_count - $ft_nm_line_count))"
-        fi
-    fi
-
+    compare_nm_and_ft_nm_symbols_count ".o file" $test_number ./absolute_value.o "-a"
 
     test_name="test_elf64_symbols_count without any option"
-	echo "\n${_YELLOW}${test_name}:${_END}\n"
-
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
 
     test_number=1
-    test_name="simple binary file"
-    prog=./absolute_value
-    nm_line_count=$(nm "$prog"| wc -l)
-    ft_nm_line_count=$(./ft_nm "$prog"| wc -l)
-    if [ "$nm_line_count" -eq "$ft_nm_line_count" ]
-    then
-        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
-    else
-        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- nm output:${_END}"
-            echo "$nm_line_count"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_line_count"
-            echo "${_YELLOW}--- diff:${_END}"
-            echo "$(($nm_line_count - $ft_nm_line_count))"
-        fi
-    fi
-
+    compare_nm_and_ft_nm_symbols_count "simple binary file" $test_number  ./absolute_value ""
     test_number=$((test_number + 1))
-    test_name=".so file"
-    prog=./libft_malloc_aarch64_Linux.so
-    nm_line_count=$(nm "$prog"| wc -l)
-    ft_nm_line_count=$(./ft_nm "$prog"| wc -l)
-    if [ "$nm_line_count" -eq "$ft_nm_line_count" ]
-    then
-        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
-    else
-        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- nm output:${_END}"
-            echo "$nm_line_count"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_line_count"
-            echo "${_YELLOW}--- diff:${_END}"
-            echo "$(($nm_line_count - $ft_nm_line_count))"
-        fi
-    fi
-
+    compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./libft_malloc_aarch64_Linux.so ""
     test_number=$((test_number + 1))
-    test_name=".o file"
-    prog=./absolute_value.o
-    nm_line_count=$(nm "$prog"| wc -l)
-    ft_nm_line_count=$(./ft_nm "$prog"| wc -l)
-    if [ "$nm_line_count" -eq "$ft_nm_line_count" ]
-    then
-        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
-    else
-        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- nm output:${_END}"
-            echo "$nm_line_count"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_line_count"
-            echo "${_YELLOW}--- diff:${_END}"
-            echo "$(($nm_line_count - $ft_nm_line_count))"
-        fi
-    fi
-
+    compare_nm_and_ft_nm_symbols_count  ".o file" $test_number ./absolute_value.o ""
 }
 
 
 test_elf32_symbols_count()
 {
     test_name="test_elf32_symbols_count with -a option"
-	echo "\n${_YELLOW}${test_name}:${_END}\n"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
 
     test_number=1
-    test_name="simple binary file"
-    prog=./absolute_value_32
-    nm_line_count=$(nm "$prog" -a | wc -l)
-    ft_nm_line_count=$(./ft_nm "$prog" -a | wc -l)
-    if [ "$nm_line_count" -eq "$ft_nm_line_count" ]
-    then
-        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
-    else
-        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- nm output:${_END}"
-            echo "$nm_line_count"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_line_count"
-            echo "${_YELLOW}--- diff:${_END}"
-            echo "$(($nm_line_count - $ft_nm_line_count))"
-        fi
-    fi
-
+    compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value_32 "-a"
     test_number=$((test_number + 1))
-    test_name=".so file"
-    prog=./libft_malloc_aarch64_Linux.so
-    nm_line_count=$(nm "$prog" -a | wc -l)
-    ft_nm_line_count=$(./ft_nm "$prog" -a | wc -l)
-    if [ "$nm_line_count" -eq "$ft_nm_line_count" ]
-    then
-        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
-    else
-        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- nm output:${_END}"
-            echo "$nm_line_count"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_line_count"
-            echo "${_YELLOW}--- diff:${_END}"
-            echo "$(($nm_line_count - $ft_nm_line_count))"
-        fi
-    fi
-
+    compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./my_simple_lib_32.so "-a"
     test_number=$((test_number + 1))
-    test_name=".o file"
-    prog=./absolute_value_32.o
-    nm_line_count=$(nm "$prog" -a | wc -l)
-    ft_nm_line_count=$(./ft_nm "$prog" -a | wc -l)
-    if [ "$nm_line_count" -eq "$ft_nm_line_count" ]
-    then
-        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
-    else
-        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- nm output:${_END}"
-            echo "$nm_line_count"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_line_count"
-            echo "${_YELLOW}--- diff:${_END}"
-            echo "$(($nm_line_count - $ft_nm_line_count))"
-        fi
-    fi
+    compare_nm_and_ft_nm_symbols_count ".o file" $test_number  ./absolute_value_32.o "-a"
 
 
     test_name="test_elf64_symbols_count without any option"
 	echo "\n${_YELLOW}${test_name}:${_END}\n"
 
 
-    test_number=1
-    test_name="simple binary file"
-    prog=./absolute_value_32
-    nm_line_count=$(nm "$prog"| wc -l)
-    ft_nm_line_count=$(./ft_nm "$prog"| wc -l)
-    if [ "$nm_line_count" -eq "$ft_nm_line_count" ]
-    then
-        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
-    else
-        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- nm output:${_END}"
-            echo "$nm_line_count"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_line_count"
-            echo "${_YELLOW}--- diff:${_END}"
-            echo "$(($nm_line_count - $ft_nm_line_count))"
-        fi
-    fi
-
+  test_number=1
+    compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value_32 ""
     test_number=$((test_number + 1))
-    test_name=".o file"
-    prog=./absolute_value_32.o
-    nm_line_count=$(nm "$prog"| wc -l)
-    ft_nm_line_count=$(./ft_nm "$prog"| wc -l)
-    if [ "$nm_line_count" -eq "$ft_nm_line_count" ]
-    then
-        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
-    else
-        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- nm output:${_END}"
-            echo "$nm_line_count"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_line_count"
-            echo "${_YELLOW}--- diff:${_END}"
-            echo "$(($nm_line_count - $ft_nm_line_count))"
-        fi
-    fi
+    compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./my_simple_lib_32.so ""
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count  ".o file" $test_number ./absolute_value_32.o ""
+
 }
 
 
@@ -293,53 +143,25 @@ test_errors_misc()
         fi
     fi
     test_number=$((test_number + 1))
-
 }
 
 test_errors_file_type()
 {
     test_name="test_errors_file_type"
     test_number=1
-	echo "\n${_YELLOW}${test_name}:${_END}\n"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
 
-    test_name="test folders"
-
+    sub_test_name="test folders"
     prog=./foldertest
-    ft_nm_stderr=$(./ft_nm "$prog" 2>&1)
     expected_output="ft_nm: $prog: Failed to map file into memory"
-
-    if [ "$ft_nm_stderr" = "$expected_output" ]; then
-        echo "${_GREEN}${test_name}[${test_number}]: -> OK${_END}"
-    else
-        echo "${_RED}${test_name}[${test_number}]: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- expected output:${_END}"
-            echo "$expected_output"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_stderr"
-        fi
-    fi
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
     test_number=$((test_number + 1))
 
-   test_name="test not elf files (c file)"
-
+    sub_test_name="test not elf files (c file)"
     prog=./absolute_value.c
-    ft_nm_stderr=$(./ft_nm "$prog" 2>&1)
     expected_output="ft_nm: $prog: Not an ELF file"
-
-    if [ "$ft_nm_stderr" = "$expected_output" ]; then
-        echo "${_GREEN}${test_name}[${test_number}]: -> OK${_END}"
-    else
-        echo "${_RED}${test_name}[${test_number}]: -> KO${_END}"
-        if [ "$TEST_DISPLAY_KO" -eq 1 ]; then
-            echo "${_YELLOW}--- expected output:${_END}"
-            echo "$expected_output"
-            echo "${_YELLOW}--- ft_nm output:${_END}"
-            echo "$ft_nm_stderr"
-        fi
-    fi
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
     test_number=$((test_number + 1))
-
 }
 
 test_elf64()
