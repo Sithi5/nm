@@ -23,7 +23,7 @@ char *get_symbol_name_from_index(t_nm *nm, size_t symbol_index) {
                              shdr32->sh_name);
         } else {
             return (char *) (nm->mapped_data + nm->elf_data.symtab_strtab_section.elf32->sh_offset +
-                             nm->elf_data.symbols.elf64[symbol_index].st_name);
+                             nm->elf_data.symbols.elf32[symbol_index].st_name);
         }
     } else {
         return NULL;
