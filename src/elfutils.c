@@ -64,7 +64,7 @@ bool should_display_symbol(t_nm *nm) {
 
     // If -a flag is set, display all symbols except compiler generated symbols
     if (nm->args.a_flag) {
-        DEBUG ? ft_printf("TO DISPLAY\n") : 0;
+        DEBUG ? ft_printf("TO DISPLAY -a\n") : 0;
         return true;
     }
 
@@ -74,20 +74,20 @@ bool should_display_symbol(t_nm *nm) {
         if ((bind == STB_GLOBAL || bind == STB_WEAK ||
              (bind == STB_LOCAL && shndx != SHN_UNDEF && type != STT_FILE)) &&
             (type != STT_SECTION)) {
-            DEBUG ? ft_printf("TO DISPLAY\n") : 0;
+            DEBUG ? ft_printf("TO DISPLAY no flag\n") : 0;
             return true;
         }
     }
 
     // If -g flag is set, display only global and weak symbols
     if (nm->args.g_flag && (bind == STB_GLOBAL || bind == STB_WEAK)) {
-        DEBUG ? ft_printf("TO DISPLAY\n") : 0;
+        DEBUG ? ft_printf("TO DISPLAY -g\n") : 0;
         return true;
     }
 
     // If -u flag is set, display only undefined symbols
     if (nm->args.u_flag && shndx == SHN_UNDEF) {
-        DEBUG ? ft_printf("TO DISPLAY\n") : 0;
+        DEBUG ? ft_printf("TO DISPLAY -u\n") : 0;
         return true;
     }
 
