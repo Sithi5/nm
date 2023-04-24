@@ -113,10 +113,10 @@ char get_current_symbol_type_char(t_nm *nm) {
     }
 
     if (shndx == SHN_UNDEF) {
-        return (bind == STB_WEAK) ? 'w' : 'U';
-    } else if (shndx == SHN_ABS) {
+        return (bind == STB_WEAK) ? 'w' : 'U';   // Weak or strong undefined symbol
+    } else if (shndx == SHN_ABS) {               // Absolute symbol
         symbol_char = 'A';
-    } else if (shndx == SHN_COMMON) {
+    } else if (shndx == SHN_COMMON) {   // Common symbol
         symbol_char = 'C';
     } else {
         if (section_header) {
@@ -124,7 +124,8 @@ char get_current_symbol_type_char(t_nm *nm) {
             case SHT_PROGBITS:
                 if (section_header->sh_flags & SHF_WRITE) {
                     symbol_char = 'D';
-                } else if (section_header->sh_flags & SHF_EXECINSTR) {
+                } else if (section_header->sh_flags &
+                           SHF_EXECINSTR) {   // Executable, so probably text section
                     symbol_char = 'T';
                 } else if (section_header->sh_flags & SHF_ALLOC) {   // Read-only at runtime
                     symbol_char = 'R';
@@ -132,11 +133,11 @@ char get_current_symbol_type_char(t_nm *nm) {
                     symbol_char = 'n';   // read-only not at runtime
                 }
                 break;
-            case SHT_INIT_ARRAY:
+            case SHT_INIT_ARRAY:   // Part of initialized data section
             case SHT_FINI_ARRAY:
             case SHT_DYNAMIC:
             case SHT_PREINIT_ARRAY:
-                symbol_char = 'd';
+                symbol_char = 'D';
                 break;
             case SHT_NOBITS:
                 if (section_header->sh_flags & SHF_ALLOC && section_header->sh_flags & SHF_WRITE) {
@@ -156,9 +157,7 @@ char get_current_symbol_type_char(t_nm *nm) {
         }
     }
 
-    if (bind == STB_WEAK) {
-        symbol_char = (symbol_char == 'D') ? 'W' : 'w';
-    } else if (bind == STB_LOCAL) {
+    if (bind == STB_LOCAL) {
         symbol_char = ft_tolower(symbol_char);
     }
 
