@@ -36,11 +36,13 @@ int partition(t_nm *nm, int low, int high) {
     int j = high;
 
     while (i <= j) {
-        while (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) < 0) {
+        while (nm->args.r_flag ? ft_strcmp(get_symbol_name_from_index(nm, i), pivot) > 0
+                               : ft_strcmp(get_symbol_name_from_index(nm, i), pivot) < 0) {
             i++;
         }
 
-        while (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) > 0) {
+        while (nm->args.r_flag ? ft_strcmp(get_symbol_name_from_index(nm, j), pivot) < 0
+                               : ft_strcmp(get_symbol_name_from_index(nm, j), pivot) > 0) {
             j--;
         }
 
