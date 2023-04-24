@@ -131,6 +131,7 @@ char *get_symbol_name_in_strtab_section(t_nm *nm, t_symbol symbol);
 char *get_symbol_name_from_index(t_nm *nm, size_t symbol_index);
 
 // sort.c
-void sort_symbols(t_nm *nm);
+void bubble_sort_symbols(t_nm *nm);
+void quick_sort_symbols(t_nm *nm);
 
 #endif
