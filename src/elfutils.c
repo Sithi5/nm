@@ -34,27 +34,23 @@ bool should_display_symbol(t_nm *nm) {
     unsigned char bind;
     unsigned char type;
     uint16_t shndx;
-    Elf64_Shdr *section_header64 = NULL;
-    Elf32_Shdr *section_header32 = NULL;
 
     if (nm->elf_data.elf_class == ELFCLASS64) {
         bind = ELF64_ST_BIND(nm->elf_data.current_symbol.elf64->st_info);
         type = ELF64_ST_TYPE(nm->elf_data.current_symbol.elf64->st_info);
         shndx = nm->elf_data.current_symbol.elf64->st_shndx;
-        section_header64 = &nm->elf_data.section_headers.elf64[shndx];
     } else if (nm->elf_data.elf_class == ELFCLASS32) {
         bind = ELF32_ST_BIND(nm->elf_data.current_symbol.elf32->st_info);
         type = ELF32_ST_TYPE(nm->elf_data.current_symbol.elf32->st_info);
         shndx = nm->elf_data.current_symbol.elf32->st_shndx;
-        section_header32 = &nm->elf_data.section_headers.elf32[shndx];
     } else {
         return false;
     }
 
-    DEBUG ? ft_printf("DEBUG: symbol (name=%s, type=%u, bind=%u, shndx=%u)\t",
-                      nm->elf_data.current_symbol_name, type, bind, shndx)
+    DEBUG ? ft_printf("DEBUG: symbol (name=%s, type=%u, bind=%u, shndx=%u, symbol_type_char=%c)\t",
+                      nm->elf_data.current_symbol_name, type, bind, shndx,
+                      get_current_symbol_type_char(nm))
           : 0;
-
     // Skip compiler generated symbols
     if (ft_strncmp(nm->elf_data.current_symbol_name, "$", 1) == 0 ||
         (nm->elf_data.current_symbol_name[0] == '\0' && shndx == SHN_UNDEF)) {
@@ -68,8 +64,8 @@ bool should_display_symbol(t_nm *nm) {
         return true;
     }
 
-    // If no flags are set, display all global and weak symbols, and local symbols except
-    // STT_NOTYPE, UNDEF and STT_SECTION
+    // If no flags are set, display all global and weak symbols, and local symbols
+    // except STT_NOTYPE, UNDEF and STT_SECTION
     if (!nm->args.a_flag && !nm->args.g_flag && !nm->args.u_flag) {
         if ((bind == STB_GLOBAL || bind == STB_WEAK ||
              (bind == STB_LOCAL && shndx != SHN_UNDEF && type != STT_FILE)) &&
@@ -91,7 +87,8 @@ bool should_display_symbol(t_nm *nm) {
         return true;
     }
 
-    DEBUG ? ft_printf("SKIPPED\n") : 0;
+    DEBUG
+    ? ft_printf("SKIPPED\n") : 0;
     return false;
 }
 
@@ -100,20 +97,19 @@ char get_current_symbol_type_char(t_nm *nm) {
     unsigned char symbol_type;
     uint16_t shndx;
     char symbol_char;
-    Elf64_Shdr *section_header64 = NULL;
-    Elf32_Shdr *section_header32 = NULL;
+    Elf64_Shdr *section_header = NULL;
 
     symbol_char = '?';
     if (nm->elf_data.elf_class == ELFCLASS64) {
         bind = ELF64_ST_BIND(nm->elf_data.current_symbol.elf64->st_info);
         symbol_type = ELF64_ST_TYPE(nm->elf_data.current_symbol.elf64->st_info);
         shndx = nm->elf_data.current_symbol.elf64->st_shndx;
-        section_header64 = &nm->elf_data.section_headers.elf64[shndx];
+        section_header = &nm->elf_data.section_headers.elf64[shndx];
     } else if (nm->elf_data.elf_class == ELFCLASS32) {
         bind = ELF32_ST_BIND(nm->elf_data.current_symbol.elf32->st_info);
         symbol_type = ELF32_ST_TYPE(nm->elf_data.current_symbol.elf32->st_info);
         shndx = nm->elf_data.current_symbol.elf32->st_shndx;
-        section_header32 = &nm->elf_data.section_headers.elf32[shndx];
+        section_header = &nm->elf_data.section_headers.elf32[shndx];
     }
 
     if (shndx == SHN_UNDEF) {
@@ -122,51 +118,50 @@ char get_current_symbol_type_char(t_nm *nm) {
         symbol_char = 'A';
     } else if (shndx == SHN_COMMON) {
         symbol_char = 'C';
-    } else if (nm->elf_data.elf_class == ELFCLASS64 && section_header64) {
-        switch (section_header64->sh_type) {
-        case SHT_PROGBITS:
-            if (section_header64->sh_flags & SHF_WRITE) {
-                symbol_char = 'D';
-            } else if (section_header64->sh_flags & SHF_EXECINSTR) {
-                symbol_char = 'T';
-            } else {
-                symbol_char = 'R';
-            }
-            break;
-        case SHT_NOBITS:
-            if (section_header64->sh_flags & SHF_ALLOC && section_header64->sh_flags & SHF_WRITE) {
-                symbol_char = 'B';
-            }
-            break;
-        default:
-            symbol_char = '?';
-            break;
-        }
-    } else if (nm->elf_data.elf_class == ELFCLASS32 && section_header32) {
-        switch (section_header32->sh_type) {
-        case SHT_PROGBITS:
-            if (section_header32->sh_flags & SHF_WRITE) {
-                symbol_char = 'D';
-            } else if (section_header32->sh_flags & SHF_EXECINSTR) {
-                symbol_char = 'T';
-            } else {
-                symbol_char = 'R';
-            }
-            break;
-        case SHT_NOBITS:
-            if (section_header32->sh_flags & SHF_ALLOC && section_header32->sh_flags & SHF_WRITE) {
-                symbol_char = 'B';
-            }
-            break;
-        default:
-            symbol_char = '?';
-            break;
-        }
     } else {
-        symbol_char = '?';
+        if (section_header) {
+            switch (section_header->sh_type) {
+            case SHT_PROGBITS:
+                if (section_header->sh_flags & SHF_WRITE) {
+                    symbol_char = 'D';
+                } else if (section_header->sh_flags & SHF_EXECINSTR) {
+                    symbol_char = 'T';
+                } else if (section_header->sh_flags & SHF_ALLOC) {   // Read-only at runtime
+                    symbol_char = 'R';
+                } else {
+                    symbol_char = 'n';   // read-only not at runtime
+                }
+                break;
+            case SHT_INIT_ARRAY:
+            case SHT_FINI_ARRAY:
+            case SHT_DYNAMIC:
+            case SHT_PREINIT_ARRAY:
+                symbol_char = 'd';
+                break;
+            case SHT_NOBITS:
+                if (section_header->sh_flags & SHF_ALLOC && section_header->sh_flags & SHF_WRITE) {
+                    symbol_char = 'B';
+                }
+                break;
+            default:
+                if (section_header->sh_flags & SHF_ALLOC &&
+                    !(section_header->sh_flags & SHF_WRITE) &&
+                    !(section_header->sh_flags & SHF_EXECINSTR)) {
+                    symbol_char = 'R';
+                } else {
+                    symbol_char = '?';
+                }
+                break;
+            }
+        }
     }
 
-    symbol_char = (bind == STB_LOCAL) ? ft_tolower(symbol_char) : symbol_char;
+    if (bind == STB_WEAK) {
+        symbol_char = (symbol_char == 'D') ? 'W' : 'w';
+    } else if (bind == STB_LOCAL) {
+        symbol_char = ft_tolower(symbol_char);
+    }
+
     return symbol_char;
 }
 

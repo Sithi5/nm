@@ -19,6 +19,7 @@ static int get_section_headers_count(t_nm *nm) {
     return nm->elf_data.elf_class == ELFCLASS64 ? nm->elf_data.elf_header.elf64->e_shnum
                                                 : nm->elf_data.elf_header.elf32->e_shnum;
 }
+
 void find_symbol_and_string_table_sections(t_nm *nm) {
     int e_shnum;
     uint32_t sh_type;
@@ -91,7 +92,6 @@ void process_elf_file(t_nm *nm) {
     DEBUG ? ft_printf("DEBUG: Processing file: %s\n", nm->current_filename) : 0;
     set_elf_data_header(nm);
     find_symbol_and_string_table_sections(nm);
-
     if ((nm->elf_data.elf_class == ELFCLASS64 && !(nm->elf_data.symtab_section.elf64)) ||
         (nm->elf_data.elf_class == ELFCLASS32 && !(nm->elf_data.symtab_section.elf32))) {
         ft_dprintf(STDERR_FILENO, "%s: %s: no symbols\n", PROGRAM_NAME, nm->current_filename);
@@ -109,9 +109,7 @@ void process_elf_file(t_nm *nm) {
                    nm->current_filename);
         return;
     }
-
     set_elf_data_symbols(nm);
-
     if (!nm->args.p_flag) {
         quick_sort_symbols(nm);
     }
