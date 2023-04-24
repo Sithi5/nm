@@ -17,7 +17,7 @@ WEXTRA				:=	yes
 WSHADOW				:=	yes
 WERROR				:=	no
 FSANITIZE			:=	no
-DEBUG				:=	yes
+DEBUG				:=	no
 O2					:=	no
 
 CC					:= gcc
@@ -153,6 +153,11 @@ fclean: clean
 	@make -C $(LIBFT_PATH) fclean
 
 re: fclean all
+
+re-fast:
+	@rm -f $(NAME)
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(NAME)"$(_END)"
+	@make all
 
 help:
 	@echo "$(_YELLOW)Makefile for generating binary infectors."

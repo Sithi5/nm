@@ -62,20 +62,21 @@ bool should_display_symbol(t_nm *nm) {
         return false;
     }
 
-    // If no flags are set, display all global and weak symbols, and local symbols except STT_NOTYPE
-    // with SHN_UNDEF or in the .init_array section
-    if (!nm->args.a_flag && !nm->args.g_flag && !nm->args.u_flag) {
-        if (bind == STB_GLOBAL || bind == STB_WEAK ||
-            (bind == STB_LOCAL && type != STT_NOTYPE && shndx == SHN_UNDEF)) {
-            DEBUG ? ft_printf("TO DISPLAY\n") : 0;
-            return true;
-        }
-    }
-
-    // If -a flag is set, display all symbols
+    // If -a flag is set, display all symbols except compiler generated symbols
     if (nm->args.a_flag) {
         DEBUG ? ft_printf("TO DISPLAY\n") : 0;
         return true;
+    }
+
+    // If no flags are set, display all global and weak symbols, and local symbols except
+    // STT_NOTYPE, UNDEF and STT_SECTION
+    if (!nm->args.a_flag && !nm->args.g_flag && !nm->args.u_flag) {
+        if ((bind == STB_GLOBAL || bind == STB_WEAK ||
+             (bind == STB_LOCAL && shndx != SHN_UNDEF && type != STT_FILE)) &&
+            (type != STT_SECTION)) {
+            DEBUG ? ft_printf("TO DISPLAY\n") : 0;
+            return true;
+        }
     }
 
     // If -g flag is set, display only global and weak symbols
