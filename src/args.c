@@ -33,7 +33,7 @@ void parse_args(int argc, char *argv[], t_nm *nm) {
         } else if (ft_strcmp(argv[i], "-g") == 0 || ft_strcmp(argv[i], "--extern-only") == 0) {
             nm->args.g_flag = true;
         } else if (ft_strcmp(argv[i], "-u") == 0 || ft_strcmp(argv[i], "--undefined-only") == 0) {
-            nm->args.g_flag = true;
+            nm->args.u_flag = true;
         } else if (ft_strcmp(argv[i], "-r") == 0 || ft_strcmp(argv[i], "--reverse-sort") == 0) {
             nm->args.r_flag = true;
         } else if (ft_strcmp(argv[i], "-p") == 0 || ft_strcmp(argv[i], "--no-sort") == 0) {
