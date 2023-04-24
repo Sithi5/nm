@@ -12,13 +12,13 @@ ART_NAME			=	bird
 #                                COMPILATION MODE                              #
 ################################################################################
 
-WALL				:=	yes
-WEXTRA				:=	yes
-WSHADOW				:=	yes
-WERROR				:=	no
-FSANITIZE			:=	no
-DEBUG				:=	no
-O2					:=	no
+WALL				?=	yes
+WEXTRA				?=	yes
+WSHADOW				?=	yes
+WERROR				?=	no
+FSANITIZE			?=	no
+DEBUG				?=	no
+O2					?=	no
 
 CC					:= gcc
 GEN					:= Generated in mode
@@ -154,9 +154,11 @@ fclean: clean
 
 re: fclean all
 
-re-fast:
+re-no-submodule:
 	@rm -f $(NAME)
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(NAME)"$(_END)"
+	@rm -rf $(OBJ_PATH) 2> /dev/null || true
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(OBJ_PATH)"$(_END)"
 	@make all
 
 help:
