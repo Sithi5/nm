@@ -1,15 +1,15 @@
 #!/bin/sh
 
 # Tests configuration
-VERBOSE=1
+VERBOSE=0
 
 # Activate or deactivate tests
-TEST_ALL=0
-TEST_ELF64_SYMBOLS_COUNT=1
-TEST_ELF32_SYMBOLS_COUNT=1
+TEST_ALL=1
+TEST_ELF64_SYMBOLS_COUNT=0
+TEST_ELF32_SYMBOLS_COUNT=0
+TEST_ELF64=1
 TEST_ERRORS_MISC=0
 TEST_ERRORS_FILE_TYPE=0
-TEST_ELF64=0
 
 # Colors
 
@@ -96,45 +96,56 @@ compare_ft_nm_error_with_expected_output() {
 
 test_elf64_symbols_count()
 {
-    test_name="test_elf64_symbols_count with -a option"
-    echo "\n${_YELLOW}${test_name}:${_END}\n"
-
-    test_number=1
-    compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value "-a"
-    test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./libft_malloc_aarch64_Linux.so "-a"
-    test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_symbols_count ".o file" $test_number ./absolute_value.o "-a"
-
     test_name="test_elf64_symbols_count without any option"
     echo "\n${_YELLOW}${test_name}:${_END}\n"
-
     test_number=1
     compare_nm_and_ft_nm_symbols_count "simple binary file" $test_number  ./absolute_value ""
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./libft_malloc_aarch64_Linux.so ""
     test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count  ".so file harder" $test_number ./libasan.so ""
+    test_number=$((test_number + 1))
     compare_nm_and_ft_nm_symbols_count  ".o file" $test_number ./absolute_value.o ""
+
+    test_name="test_elf64_symbols_count with -a option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./libft_malloc_aarch64_Linux.so "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count  ".so file harder" $test_number ./libasan.so "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count ".o file" $test_number ./absolute_value.o "-a"
+
+    test_name="test_elf64_symbols_count with -g option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./libft_malloc_aarch64_Linux.so "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count  ".so file harder" $test_number ./libasan.so "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count ".o file" $test_number ./absolute_value.o "-g"
+
+    test_name="test_elf64_symbols_count with -u option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./libft_malloc_aarch64_Linux.so "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count  ".so file harder" $test_number ./libasan.so "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count ".o file" $test_number ./absolute_value.o "-u"
 }
 
 
 test_elf32_symbols_count()
 {
-    test_name="test_elf32_symbols_count with -a option"
-    echo "\n${_YELLOW}${test_name}:${_END}\n"
-
-    test_number=1
-    compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value_32 "-a"
-    test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./my_simple_lib_32.so "-a"
-    test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_symbols_count ".o file" $test_number  ./absolute_value_32.o "-a"
-
-
-    test_name="test_elf64_symbols_count without any option"
+    test_name="test_elf32_symbols_count without any option"
 	echo "\n${_YELLOW}${test_name}:${_END}\n"
-
-
     test_number=1
     compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value_32 ""
     test_number=$((test_number + 1))
@@ -142,6 +153,32 @@ test_elf32_symbols_count()
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_symbols_count  ".o file" $test_number ./absolute_value_32.o ""
 
+    test_name="test_elf32_symbols_count with -a option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value_32 "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./my_simple_lib_32.so "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count ".o file" $test_number  ./absolute_value_32.o "-a"
+
+    test_name="test_elf32_symbols_count with -g option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value_32 "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./my_simple_lib_32.so "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count ".o file" $test_number  ./absolute_value_32.o "-g"
+
+    test_name="test_elf32_symbols_count with -u option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_symbols_count  "simple binary file" $test_number ./absolute_value_32 "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count  ".so file" $test_number ./my_simple_lib_32.so "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_symbols_count ".o file" $test_number  ./absolute_value_32.o "-u"
 }
 
 
@@ -188,20 +225,92 @@ test_errors_file_type()
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
     test_number=$((test_number + 1))
 
-    sub_test_name="test not elf files (c file)"
+    sub_test_name="test not elf files (.c file)"
     prog=./absolute_value.c
     expected_output="ft_nm: $prog: Not an ELF file"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    sub_test_name="test not elf files (.a file)"
+    prog=./libft.a
+    expected_output="ft_nm: $prog: Not an ELF file"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    sub_test_name="test file doesn't exist"
+    prog=./DoesNotExist
+    expected_output="ft_nm: $prog: Failed to open file"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
     test_number=$((test_number + 1))
 }
 
 test_elf64()
 {
+    test_name="test_elf64 without option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value ""
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib.so ""
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file harder" $test_number ./libasan.so ""
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value.o ""
+
     test_name="test_elf64 with -a option"
     echo "\n${_YELLOW}${test_name}:${_END}\n"
-
     test_number=1
-    compare_nm_and_ft_nm_output  "simple binary file" $test_number ./absolute_value_32 "-a"
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib.so "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file harder" $test_number ./libasan.so "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value.o "-a"
+
+    test_name="test_elf64 with -g option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib.so "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file harder" $test_number ./libasan.so "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value.o "-g"
+
+    test_name="test_elf64 with -u option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib.so "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file harder" $test_number ./libasan.so "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value.o "-u"
+
+    test_name="test_elf64 with -r option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib.so "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file harder" $test_number ./libasan.so "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value.o "-r"
+
+    test_name="test_elf64 with -p option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib.so "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file harder" $test_number ./libasan.so "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value.o "-p"
 }
 
 if [ $TEST_ELF64_SYMBOLS_COUNT -eq 1 ]|| [ "$TEST_ALL" -eq 1 ]
