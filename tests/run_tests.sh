@@ -8,6 +8,7 @@ TEST_ALL=1
 TEST_ELF64_SYMBOLS_COUNT=0
 TEST_ELF32_SYMBOLS_COUNT=0
 TEST_ELF64=1
+TEST_ELF32=1
 TEST_ERRORS_MISC=0
 TEST_ERRORS_FILE_TYPE=0
 
@@ -96,6 +97,9 @@ compare_ft_nm_error_with_expected_output() {
 
 test_elf64_symbols_count()
 {
+    test_name="TEST_ELF64_SYMBOLS_COUNT"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
+
     test_name="test_elf64_symbols_count without any option"
     echo "\n${_YELLOW}${test_name}:${_END}\n"
     test_number=1
@@ -144,6 +148,9 @@ test_elf64_symbols_count()
 
 test_elf32_symbols_count()
 {
+    test_name="TEST_ELF32_SYMBOLS_COUNT"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
+
     test_name="test_elf32_symbols_count without any option"
 	echo "\n${_YELLOW}${test_name}:${_END}\n"
     test_number=1
@@ -184,12 +191,11 @@ test_elf32_symbols_count()
 
 test_errors_misc()
 {
-    test_name="test_errors_misc"
+    test_name="TEST_ERRORS_MISC"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
+
     test_number=1
-	echo "\n${_YELLOW}${test_name}:${_END}\n"
-
     test_name="test no symbols"
-
     prog=./no_symbols
     nm_stderr=$(nm "$prog" 2> nm_stderr.txt)
     ft_nm_stderr=$(./ft_nm "$prog" 2> ft_nm_stderr.txt)
@@ -215,10 +221,10 @@ test_errors_misc()
 
 test_errors_file_type()
 {
-    test_name="test_errors_file_type"
-    test_number=1
-    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_name="TEST_ERRORS_FILE_TYPE"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
 
+    test_number=1
     sub_test_name="test folders"
     prog=./foldertest
     expected_output="ft_nm: $prog: Failed to map file into memory"
@@ -246,6 +252,9 @@ test_errors_file_type()
 
 test_elf64()
 {
+    test_name="TEST_ELF64"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
+
     test_name="test_elf64 without option"
     echo "\n${_YELLOW}${test_name}:${_END}\n"
     test_number=1
@@ -313,6 +322,67 @@ test_elf64()
     compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value.o "-p"
 }
 
+
+test_elf32()
+{
+    test_name="TEST_ELF32"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
+
+    test_name="test_elf32 without option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value_32 ""
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib_32.so ""
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value_32.o ""
+
+    test_name="test_elf32 with -a option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value_32 "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib_32.so "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value_32.o "-a"
+
+    test_name="test_elf32 with -g option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value_32 "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib_32.so "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value_32.o "-g"
+
+    test_name="test_elf32 with -u option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value_32 "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib_32.so "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value_32.o "-u"
+
+    test_name="test_elf32 with -r option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value_32 "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib_32.so "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value_32.o "-r"
+
+    test_name="test_elf32 with -p option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value_32 "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib_32.so "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value_32.o "-p"
+}
+
 if [ $TEST_ELF64_SYMBOLS_COUNT -eq 1 ]|| [ "$TEST_ALL" -eq 1 ]
 then
 	test_elf64_symbols_count
@@ -326,6 +396,11 @@ fi
 if [ $TEST_ELF64 -eq 1 ]|| [ "$TEST_ALL" -eq 1 ]
 then
 	test_elf64
+fi
+
+if [ $TEST_ELF32 -eq 1 ]|| [ "$TEST_ALL" -eq 1 ]
+then
+	test_elf32
 fi
 
 if [ $TEST_ERRORS_MISC -eq 1 ]|| [ "$TEST_ALL" -eq 1 ]
