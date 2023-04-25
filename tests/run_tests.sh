@@ -52,6 +52,30 @@ compare_nm_and_ft_nm_symbols_count() {
     fi
 }
 
+check_leaks() {
+    ft_nm_output=$1
+    test_name=$2
+    test_number=$3
+
+    if echo "$ft_nm_output" | grep -q 'ERROR SUMMARY: 0 errors from 0 contexts'; then
+        if echo "$ft_nm_output" | grep -q 'All heap blocks were freed -- no leaks are possible'; then
+            echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
+        else
+            echo "${_RED}[$test_number] ${test_name}: -> KO (memory leak)${_END}"
+            if [ "$VERBOSE" -eq 1 ]; then
+                echo "${_YELLOW}--- valgrind output:${_END}"
+                echo "$ft_nm_output"
+            fi
+        fi
+    else
+        echo "${_RED}[$test_number] ${test_name}: -> KO (memory error)${_END}"
+        if [ "$VERBOSE" -eq 1 ]; then
+            echo "${_YELLOW}--- valgrind output:${_END}"
+            echo "$ft_nm_output"
+        fi
+    fi
+}
+
 compare_nm_and_ft_nm_output() {
     test_name=$1
     test_number=$2
@@ -693,6 +717,36 @@ test_misc()
             rm nm_output.txt ft_nm_output.txt
         fi
     fi
+
+    test_name="test valgrind"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+
+    test_name="test valgrind bin5_x64"
+    test_number=$((test_number + 1))
+    ft_nm_output=$(valgrind ./ft_nm ./obj/bin5_x64.o 2>&1)
+    check_leaks "$ft_nm_output" "$test_name" "$test_number"
+
+    test_name="test valgrind obj3_shentsize_corrupted_x64"
+    test_number=$((test_number + 1))
+    ft_nm_output=$(valgrind ./ft_nm ./obj/obj3_shentsize_corrupted_x64.o 2>&1)
+    check_leaks "$ft_nm_output" "$test_name" "$test_number"
+
+    test_name="test valgrind libft_malloc_aarch64_Linux"
+    test_number=$((test_number + 1))
+    ft_nm_output=$(valgrind ./ft_nm ./lib/libft_malloc_aarch64_Linux.so 2>&1)
+    check_leaks "$ft_nm_output" "$test_name" "$test_number"
+
+    test_name="test valgrind my_simple_lib_32"
+    test_number=$((test_number + 1))
+    ft_nm_output=$(valgrind ./ft_nm ./lib/my_simple_lib_32.so 2>&1)
+    check_leaks "$ft_nm_output" "$test_name" "$test_number"
+
+    test_name="test valgrind libasan.so"
+    test_number=$((test_number + 1))
+    ft_nm_output=$(valgrind ./ft_nm ./lib/libasan.so 2>&1)
+    check_leaks "$ft_nm_output" "$test_name" "$test_number"
+
+
 }
 
 if [ $TEST_ELF64_SYMBOLS_COUNT -eq 1 ]|| [ "$TEST_ALL" -eq 1 ]

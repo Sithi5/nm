@@ -21,7 +21,7 @@ static void add_file(const char *filename, t_nm *nm) {
                    nm->current_filename, MAX_FILES);
         exit(ERROR_TOO_MANY_INPUT_FILES);
     }
-    nm->args.files_names[nm->file_count++] = strdup(filename);
+    nm->args.files_names[nm->file_count++] = filename;
 }
 
 void parse_args(int argc, char *argv[], t_nm *nm) {
