@@ -43,6 +43,8 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < nm.file_count; i++) {
         nm.current_file_index = i;
         nm.current_filename = nm.args.files_names[i];
+        if (nm.file_count > 1)
+            ft_printf("\n%s:\n", nm.current_filename);
         process_file(&nm);
     }
 

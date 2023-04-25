@@ -11,8 +11,9 @@ TEST_ELF64=0
 TEST_ELF32=0
 TEST_ERRORS_MISC=0
 TEST_ERRORS_FILE_TYPE=0
-TEST_ERRORS_FILE_CORRUPTED=1
-TEST_TMP=1
+TEST_ERRORS_FILE_CORRUPTED=0
+TEST_TMP=0
+TEST_MISC=1
 
 # Colors
 
@@ -267,6 +268,7 @@ test_errors_file_type()
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
     test_number=$((test_number + 1))
 }
+
 
 
 test_elf64()
@@ -664,6 +666,35 @@ test_errors_file_corrupted()
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
 }
 
+test_misc()
+{
+    test_name="TEST_MISC"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
+
+    test_name="test multiple valid files"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    nm_output=$(nm ./obj/absolute_value.o  ./obj/obj3_x32.o $options)
+    ft_nm_output=$(./ft_nm ./obj/absolute_value.o  ./obj/obj3_x32.o $options)
+    if [ "$nm_output" = "$ft_nm_output" ]
+    then
+        echo "${_GREEN}[$test_number] ${test_name}: -> OK${_END}"
+    else
+        echo "${_RED}[$test_number] ${test_name}: -> KO${_END}"
+        if [ "$VERBOSE" -eq 1 ]; then
+            echo "${_YELLOW}--- nm output:${_END}"
+            echo "$nm_output"
+            echo "$nm_output" > nm_output.txt
+            echo "${_YELLOW}--- ft_nm output:${_END}"
+            echo "$ft_nm_output"
+            echo "$ft_nm_output" > ft_nm_output.txt
+            echo "${_YELLOW}--- diff:${_END}"
+            diff nm_output.txt ft_nm_output.txt
+            rm nm_output.txt ft_nm_output.txt
+        fi
+    fi
+}
+
 if [ $TEST_ELF64_SYMBOLS_COUNT -eq 1 ]|| [ "$TEST_ALL" -eq 1 ]
 then
 	test_elf64_symbols_count
@@ -702,6 +733,11 @@ fi
 if [ "$TEST_TMP" -eq 1 ] || [ "$TEST_ALL" -eq 1 ]
 then
     test_tmp
+fi
+
+if [ "$TEST_MISC" -eq 1 ] || [ "$TEST_ALL" -eq 1 ]
+then
+    test_misc
 fi
 
 echo
