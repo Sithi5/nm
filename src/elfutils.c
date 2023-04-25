@@ -113,11 +113,14 @@ char get_current_symbol_type_char(t_nm *nm) {
     }
 
     if (shndx == SHN_UNDEF) {
-        return (bind == STB_WEAK) ? 'w' : 'U';   // Weak or strong undefined symbol
-    } else if (shndx == SHN_ABS) {               // Absolute symbol
+        return (bind == STB_WEAK) ? symbol_type == STT_OBJECT ? 'v' : 'w'
+                                  : 'U';   // Weak or strong undefined symbol
+    } else if (shndx == SHN_ABS) {         // Absolute symbol
         symbol_char = 'A';
     } else if (shndx == SHN_COMMON) {   // Common symbol
         symbol_char = 'C';
+    } else if (ft_strncmp(nm->elf_data.current_symbol_name, ".debug", 6) == 0) {
+        return 'N';
     } else {
         if (section_header) {
             switch (section_header->sh_type) {
@@ -157,6 +160,14 @@ char get_current_symbol_type_char(t_nm *nm) {
         }
     }
 
+    if (bind == STB_WEAK) {
+
+        if (symbol_type == STT_OBJECT) {
+            symbol_char = 'v';   // Weak symbol with a weak object specified
+        } else {
+            symbol_char = 'W';   // Weak symbol not specifically tagged as a weak object
+        }
+    }
     if (bind == STB_LOCAL) {
         symbol_char = ft_tolower(symbol_char);
     }
