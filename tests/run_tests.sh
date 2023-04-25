@@ -642,7 +642,7 @@ test_errors_file_corrupted()
     test_number=$((test_number + 1))
     sub_test_name="obj3_shnum_corrupted_x64"
     prog=./obj/obj3_shnum_corrupted_x64.o
-    expected_output="ft_nm: $prog: e_shnum 250 is corrupted or invalid"
+    expected_output="ft_nm: $prog: e_shnum is corrupted or invalid"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
 
     test_number=$((test_number + 1))

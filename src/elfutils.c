@@ -59,51 +59,30 @@ bool should_display_symbol(t_nm *nm) {
     } else {
         return false;
     }
-
-    DEBUG ? ft_printf("DEBUG: symbol (name=%s, type=%u, bind=%u, shndx=%u, symbol_type_char=%c, "
-                      "symbol_addr=%li)\t",
-                      nm->elf_data.current_symbol_name, type, bind, shndx,
-                      get_current_symbol_type_char(nm),
-                      get_symbol_address_from_index(nm, nm->elf_data.current_symbol_index))
-          : 0;
     // Skip compiler generated symbols
     if (ft_strncmp(nm->elf_data.current_symbol_name, "$", 1) == 0 ||
         (nm->elf_data.current_symbol_name[0] == '\0' && shndx == SHN_UNDEF)) {
-        DEBUG ? ft_printf("SKIPPED\n") : 0;
         return false;
     }
-
     // If -a flag is set, display all symbols except compiler generated symbols
     if (nm->args.a_flag) {
-        DEBUG ? ft_printf("TO DISPLAY -a\n") : 0;
         return true;
     }
-
     // If no flags are set, display all global and weak symbols, and local symbols
     // except STT_NOTYPE, UNDEF and STT_SECTION
     if (!nm->args.a_flag && !nm->args.g_flag && !nm->args.u_flag) {
         if ((bind == STB_GLOBAL || bind == STB_WEAK ||
              (bind == STB_LOCAL && shndx != SHN_UNDEF && type != STT_FILE)) &&
             (type != STT_SECTION)) {
-            DEBUG ? ft_printf("TO DISPLAY no flag\n") : 0;
             return true;
         }
     }
-
     // If -g flag is set, display only global and weak symbols
-    if (nm->args.g_flag && (bind == STB_GLOBAL || bind == STB_WEAK)) {
-        DEBUG ? ft_printf("TO DISPLAY -g\n") : 0;
+    if (nm->args.g_flag && (bind == STB_GLOBAL || bind == STB_WEAK))
         return true;
-    }
-
     // If -u flag is set, display only undefined symbols
-    if (nm->args.u_flag && shndx == SHN_UNDEF) {
-        DEBUG ? ft_printf("TO DISPLAY -u\n") : 0;
+    if (nm->args.u_flag && shndx == SHN_UNDEF)
         return true;
-    }
-
-    DEBUG
-    ? ft_printf("SKIPPED\n") : 0;
     return false;
 }
 
@@ -151,9 +130,8 @@ char get_current_symbol_type_char(t_nm *nm) {
                     symbol_char = 'T';
                 } else if (section_header->sh_flags & SHF_ALLOC) {
                     symbol_char = 'R';
-                } else {
+                } else
                     symbol_char = 'n';
-                }
                 break;
             case SHT_INIT_ARRAY:   // Part of initialized data section
             case SHT_FINI_ARRAY:
@@ -162,34 +140,29 @@ char get_current_symbol_type_char(t_nm *nm) {
                 symbol_char = 'D';
                 break;
             case SHT_NOBITS:
-                if (section_header->sh_flags & SHF_ALLOC && section_header->sh_flags & SHF_WRITE) {
+                if (section_header->sh_flags & SHF_ALLOC && section_header->sh_flags & SHF_WRITE)
                     symbol_char = 'B';
-                }
                 break;
             default:
                 if (section_header->sh_flags & SHF_ALLOC &&
                     !(section_header->sh_flags & SHF_WRITE) &&
                     !(section_header->sh_flags & SHF_EXECINSTR)) {
                     symbol_char = 'R';
-                } else {
+                } else
                     symbol_char = 'n';
-                }
                 break;
             }
         }
     }
 
     if (bind == STB_WEAK) {
-
-        if (symbol_type == STT_OBJECT) {
+        if (symbol_type == STT_OBJECT)
             symbol_char = 'V';   // Weak symbol with a weak object specified
-        } else {
+        else
             symbol_char = 'W';   // Weak symbol not specifically tagged as a weak object
-        }
     }
-    if (bind == STB_LOCAL) {
+    if (bind == STB_LOCAL)
         symbol_char = ft_tolower(symbol_char);
-    }
 
     return symbol_char;
 }

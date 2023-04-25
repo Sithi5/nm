@@ -3,7 +3,6 @@
 
 static bool set_elf_data_header(t_nm *nm) {
     nm->elf_data.elf_class = nm->mapped_data[EI_CLASS];
-
     if (nm->elf_data.elf_class == ELFCLASS64) {
         nm->elf_data.elf_header.elf64 = (Elf64_Ehdr *) nm->mapped_data;
         if (nm->elf_data.elf_header.elf64->e_shoff > (size_t) nm->mapped_data_info.st_size) {
@@ -35,8 +34,8 @@ bool find_symbol_and_string_table_sections(t_nm *nm) {
         nm->elf_data.elf_class == ELFCLASS64 ? sizeof(Elf64_Shdr) : sizeof(Elf32_Shdr);
     size_t max_shnum = nm->mapped_data_info.st_size / e_shentsize;
     if (e_shnum > max_shnum) {
-        printf("%s: %s: e_shnum %zu is corrupted or invalid\n", PROGRAM_NAME, nm->current_filename,
-               e_shnum);
+        ft_dprintf(STDERR_FILENO, "%s: %s: e_shnum is corrupted or invalid\n", PROGRAM_NAME,
+                   nm->current_filename, e_shnum);
         return false;
     }
     for (size_t i = 0; i < e_shnum; i++) {
@@ -70,7 +69,6 @@ bool find_symbol_and_string_table_sections(t_nm *nm) {
 }
 
 static void set_elf_data_symbols(t_nm *nm) {
-    DEBUG ? ft_printf("DEBUG: Setting symbols\n") : 0;
     if (nm->elf_data.elf_class == ELFCLASS64) {
         nm->elf_data.symbols_tab_size = nm->elf_data.symtab_section.elf64->sh_size;
         nm->elf_data.symbols_tab_entry_size = sizeof(Elf64_Sym);
@@ -87,18 +85,14 @@ static void set_elf_data_symbols(t_nm *nm) {
 }
 
 static void process_symbols(t_nm *nm) {
-    DEBUG ? ft_printf("DEBUG: Processing symbols\n") : 0;
     for (size_t i = 0; i < nm->elf_data.symbols_tab_entry_count; i++) {
         if (nm->elf_data.elf_class == ELFCLASS64) {
             nm->elf_data.current_symbol.elf64 = &(nm->elf_data.symbols.elf64[i]);
-
         } else if (nm->elf_data.elf_class == ELFCLASS32) {
             nm->elf_data.current_symbol.elf32 = &(nm->elf_data.symbols.elf32[i]);
         }
-
         nm->elf_data.current_symbol_name = get_symbol_name_from_index(nm, i);
         nm->elf_data.current_symbol_index = i;
-
         if (should_display_symbol(nm)) {
             DEBUG ? 0 : display_current_symbol(nm);
         }
@@ -106,7 +100,6 @@ static void process_symbols(t_nm *nm) {
 }
 
 void process_elf_file(t_nm *nm) {
-    DEBUG ? ft_printf("DEBUG: Processing file: %s\n", nm->current_filename) : 0;
     if (!set_elf_data_header(nm))
         return;
     if (!find_symbol_and_string_table_sections(nm))
@@ -129,8 +122,7 @@ void process_elf_file(t_nm *nm) {
         return;
     }
     set_elf_data_symbols(nm);
-    if (!nm->args.p_flag) {
+    if (!nm->args.p_flag)
         quick_sort_symbols(nm);
-    }
     process_symbols(nm);
 }
