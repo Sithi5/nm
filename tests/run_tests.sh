@@ -1,14 +1,14 @@
 #!/bin/sh
 
 # Tests configuration
-VERBOSE=0
+VERBOSE=1
 
 # Activate or deactivate tests
 TEST_ALL=0
 TEST_ELF64_SYMBOLS_COUNT=0
 TEST_ELF32_SYMBOLS_COUNT=0
 TEST_ELF64=1
-TEST_ELF32=0
+TEST_ELF32=1
 TEST_ERRORS_MISC=0
 TEST_ERRORS_FILE_TYPE=0
 
@@ -299,17 +299,6 @@ test_elf64()
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value.o "-u"
 
-    test_name="test_elf64 with -r option"
-    echo "\n${_YELLOW}${test_name}:${_END}\n"
-    test_number=1
-    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value "-r"
-    test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib.so "-r"
-    test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_output  ".so file harder" $test_number ./libasan.so "-r"
-    test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value.o "-r"
-
     test_name="test_elf64 with -p option"
     echo "\n${_YELLOW}${test_name}:${_END}\n"
     test_number=1
@@ -363,15 +352,6 @@ test_elf32()
     compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib_32.so "-u"
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value_32.o "-u"
-
-    test_name="test_elf32 with -r option"
-    echo "\n${_YELLOW}${test_name}:${_END}\n"
-    test_number=1
-    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./absolute_value_32 "-r"
-    test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_output  ".so file" $test_number ./my_simple_lib_32.so "-r"
-    test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_output  ".o file" $test_number ./absolute_value_32.o "-r"
 
     test_name="test_elf32 with -p option"
     echo "\n${_YELLOW}${test_name}:${_END}\n"

@@ -29,20 +29,18 @@ void bubble_sort_symbols(t_nm *nm) {
  * @param high
  * @return
  */
-int partition(t_nm *nm, int low, int high) {
+static int partition(t_nm *nm, int low, int high) {
     int pivot_index = low + (high - low) / 2;
     const char *pivot = get_symbol_name_from_index(nm, pivot_index);
     int i = low;
     int j = high;
 
     while (i <= j) {
-        while (nm->args.r_flag ? ft_strcmp(get_symbol_name_from_index(nm, i), pivot) > 0
-                               : ft_strcmp(get_symbol_name_from_index(nm, i), pivot) < 0) {
+        while (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) < 0) {
             i++;
         }
 
-        while (nm->args.r_flag ? ft_strcmp(get_symbol_name_from_index(nm, j), pivot) < 0
-                               : ft_strcmp(get_symbol_name_from_index(nm, j), pivot) > 0) {
+        while (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) > 0) {
             j--;
         }
 
@@ -61,12 +59,21 @@ int partition(t_nm *nm, int low, int high) {
  * @param low
  * @param high
  */
-void quick_sort(t_nm *nm, int low, int high) {
+static void quick_sort(t_nm *nm, int low, int high) {
     if (low < high) {
         int partition_index = partition(nm, low, high);
         quick_sort(nm, low, partition_index - 1);
         quick_sort(nm, partition_index, high);
     }
+}
+
+Elf64_Addr get_symbol_address_from_index(t_nm *nm, int index) {
+    if (nm->elf_data.elf_class == ELFCLASS64) {
+        return nm->elf_data.symbols.elf64[index].st_value;
+    } else if (nm->elf_data.elf_class == ELFCLASS32) {
+        return nm->elf_data.symbols.elf32[index].st_value;
+    }
+    return 0;
 }
 
 /**

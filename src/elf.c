@@ -21,11 +21,11 @@ static int get_section_headers_count(t_nm *nm) {
 }
 
 void find_symbol_and_string_table_sections(t_nm *nm) {
-    int e_shnum;
+    size_t e_shnum;
     uint32_t sh_type;
 
     e_shnum = get_section_headers_count(nm);
-    for (int i = 0; i < e_shnum; i++) {
+    for (size_t i = 0; i < e_shnum; i++) {
         sh_type = nm->elf_data.elf_class == ELFCLASS64
                       ? nm->elf_data.section_headers.elf64[i].sh_type
                       : nm->elf_data.section_headers.elf32[i].sh_type;
@@ -71,16 +71,18 @@ static void set_elf_data_symbols(t_nm *nm) {
 }
 
 static void process_symbols(t_nm *nm) {
+    size_t index;
     DEBUG ? ft_printf("DEBUG: Processing symbols\n") : 0;
     for (size_t i = 0; i < nm->elf_data.symbols_tab_entry_count; i++) {
+        index = nm->args.r_flag ? nm->elf_data.symbols_tab_entry_count - i - 1 : i;
         if (nm->elf_data.elf_class == ELFCLASS64) {
-            nm->elf_data.current_symbol.elf64 = &(nm->elf_data.symbols.elf64[i]);
+            nm->elf_data.current_symbol.elf64 = &(nm->elf_data.symbols.elf64[index]);
 
         } else if (nm->elf_data.elf_class == ELFCLASS32) {
-            nm->elf_data.current_symbol.elf32 = &(nm->elf_data.symbols.elf32[i]);
+            nm->elf_data.current_symbol.elf32 = &(nm->elf_data.symbols.elf32[index]);
         }
 
-        nm->elf_data.current_symbol_name = get_symbol_name_from_index(nm, i);
+        nm->elf_data.current_symbol_name = get_symbol_name_from_index(nm, index);
 
         if (should_display_symbol(nm)) {
             DEBUG ? 0 : display_current_symbol(nm);
