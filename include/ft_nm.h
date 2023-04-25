@@ -134,8 +134,6 @@ void bubble_sort_symbols(t_nm *nm);
 void quick_sort_symbols(t_nm *nm);
 
 // check_elf.c
-bool is_valid_elf_magic(t_nm *nm);
-bool is_valid_elf_class(t_nm *nm);
 bool is_valid_elf_header(t_nm *nm);
 
 #endif

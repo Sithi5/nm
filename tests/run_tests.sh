@@ -547,60 +547,123 @@ test_errors_file_corrupted()
     test_name="TEST_ERRORS_FILE_CORRUPTED"
     echo "\n\n${_YELLOW}${test_name}:${_END}"
 
+    test_name="easy header tests"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
+
     test_number=1
     sub_test_name="test obj1_identabi_corrupted_x64"
     prog=./obj/obj1_identabi_corrupted_x64.o
     compare_nm_and_ft_nm_output "test obj1_identabi_corrupted_x64" $test_number "./obj/obj1_identabi_corrupted_x64.o" "-g"
-    test_number=$((test_number + 1))
 
     test_number=$((test_number + 1))
     sub_test_name="obj1_identclass_corrupted_x64"
     prog=./obj/obj1_identclass_corrupted_x64.o
     expected_output="ft_nm: $prog: Unsupported ELF file class"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
 
     test_number=$((test_number + 1))
     sub_test_name="obj1_identclass2_corrupted_x64"
     prog=./obj/obj1_identclass2_corrupted_x64.o
     expected_output="ft_nm: $prog: Unsupported ELF file class"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
 
     test_number=$((test_number + 1))
     sub_test_name="obj1_identclass3_x32_corrupted_x64"
     prog=./obj/obj1_identclass3_x32_corrupted_x64.o
     expected_output="ft_nm: $prog: no symbols"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
 
     test_number=$((test_number + 1))
     sub_test_name="obj1_identdata_corrupted_x64"
     prog=./obj/obj1_identdata_corrupted_x64.o
     expected_output="ft_nm: $prog: Unsupported ELF file data encoding"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
 
     test_number=$((test_number + 1))
     sub_test_name="obj1_identelf_corrupted_x64"
     prog=./obj/obj1_identelf_corrupted_x64.o
     expected_output="ft_nm: $prog: Not an ELF file"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
 
     test_number=$((test_number + 1))
     sub_test_name="obj1_identelf2_corrupted_x64"
     prog=./obj/obj1_identelf2_corrupted_x64.o
     expected_output="ft_nm: $prog: Not an ELF file"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
 
     test_number=$((test_number + 1))
     sub_test_name="obj1_identosabi_corrupted_x64"
     prog=./obj/obj1_identosabi_corrupted_x64.o
     expected_output="ft_nm: $prog: Unsupported ELF file OS ABI"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+
     test_number=$((test_number + 1))
+    sub_test_name="obj1_identpad_corrupted_x64"
+    prog=./obj/obj1_identpad_corrupted_x64.o
+    compare_nm_and_ft_nm_output "test obj1_identabi_corrupted_x64" $test_number "./obj/obj1_identabi_corrupted_x64.o" "-g"
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identversion_corrupted_x64"
+    prog=./obj/obj1_identversion_corrupted_x64.o
+    expected_output="ft_nm: $prog: Unsupported ELF file version"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+
+    test_name="harder section corrupted tests"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj2_eshoff_corrupted_x64"
+    prog=./obj/obj2_eshoff_corrupted_x64.o
+    expected_output="ft_nm: $prog: Unsupported ELF file version"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+
+    # test_number=$((test_number + 1))
+    # sub_test_name="obj2_eshoff2_corrupted_x64"
+    # prog=./obj/obj2_eshoff2_corrupted_x64.o
+    # expected_output="ft_nm: $prog: Unsupported ELF file version"
+    # compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+
+    # test_number=$((test_number + 1))
+    # sub_test_name="obj2_eshoff3_corrupted_x64"
+    # prog=./obj/obj2_eshoff3_corrupted_x64.o
+    # expected_output="ft_nm: $prog: Unsupported ELF file version"
+    # compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+
+    # test_number=$((test_number + 1))
+    # sub_test_name="obj3_eshsize_corrupted_x64"
+    # prog=./obj/obj3_eshsize_corrupted_x64.o
+    # expected_output="ft_nm: $prog: Unsupported ELF file version"
+    # compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+
+    # test_number=$((test_number + 1))
+    # sub_test_name="obj3_shentsize_corrupted_x64"
+    # prog=./obj/obj3_shentsize_corrupted_x64.o
+    # expected_output="ft_nm: $prog: Unsupported ELF file version"
+    # compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+
+    # test_number=$((test_number + 1))
+    # sub_test_name="obj3_shnum_corrupted_x64"
+    # prog=./obj/obj3_shnum_corrupted_x64.o
+    # expected_output="ft_nm: $prog: Unsupported ELF file version"
+    # compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+
+    # test_number=$((test_number + 1))
+    # sub_test_name="obj3_shnum2_corrupted_x64"
+    # prog=./obj/obj3_shnum2_corrupted_x64.o
+    # expected_output="ft_nm: $prog: Unsupported ELF file version"
+    # compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+
+    # test_number=$((test_number + 1))
+    # sub_test_name="obj4_shstrndx_corrupted_x64"
+    # prog=./obj/obj4_shstrndx_corrupted_x64.o
+    # expected_output="ft_nm: $prog: Unsupported ELF file version"
+    # compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+
+    # test_number=$((test_number + 1))
+    # sub_test_name="obj4_shstrndx2_corrupted_x64"
+    # prog=./obj/obj4_shstrndx2_corrupted_x64.o
+    # expected_output="ft_nm: $prog: Unsupported ELF file version"
+    # compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
 }
 
 if [ $TEST_ELF64_SYMBOLS_COUNT -eq 1 ]|| [ "$TEST_ALL" -eq 1 ]
