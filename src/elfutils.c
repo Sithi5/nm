@@ -107,6 +107,11 @@ bool should_display_symbol(t_nm *nm) {
     return false;
 }
 
+int get_section_headers_count(t_nm *nm) {
+    return nm->elf_data.elf_class == ELFCLASS64 ? nm->elf_data.elf_header.elf64->e_shnum
+                                                : nm->elf_data.elf_header.elf32->e_shnum;
+}
+
 char get_current_symbol_type_char(t_nm *nm) {
     unsigned char bind;
     unsigned char symbol_type;

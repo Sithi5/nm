@@ -128,6 +128,7 @@ void swap_symbols_index(t_nm *nm, size_t symbol_index_1, size_t symbol_index_2);
 char *get_symbol_name_in_strtab_section(t_nm *nm, t_symbol symbol);
 char *get_symbol_name_from_index(t_nm *nm, size_t symbol_index);
 uint64_t get_symbol_address_from_index(t_nm *nm, int index);
+int get_section_headers_count(t_nm *nm);
 
 // sort.c
 void bubble_sort_symbols(t_nm *nm);
@@ -135,5 +136,6 @@ void quick_sort_symbols(t_nm *nm);
 
 // check_elf.c
 bool is_valid_elf_header(t_nm *nm);
+bool is_section_headers_size_valid(t_nm *nm);
 
 #endif
