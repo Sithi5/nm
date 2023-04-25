@@ -31,19 +31,19 @@ bool find_symbol_and_string_table_sections(t_nm *nm) {
     uint32_t sh_type;
 
     e_shnum = get_section_headers_count(nm);
+    size_t e_shentsize =
+        nm->elf_data.elf_class == ELFCLASS64 ? sizeof(Elf64_Shdr) : sizeof(Elf32_Shdr);
+    size_t max_shnum = nm->mapped_data_info.st_size / e_shentsize;
+    if (e_shnum > max_shnum) {
+        printf("%s: %s: e_shnum %zu is corrupted or invalid\n", PROGRAM_NAME, nm->current_filename,
+               e_shnum);
+        return false;
+    }
     for (size_t i = 0; i < e_shnum; i++) {
         sh_type = nm->elf_data.elf_class == ELFCLASS64
                       ? nm->elf_data.section_headers.elf64[i].sh_type
                       : nm->elf_data.section_headers.elf32[i].sh_type;
-        Elf64_Shdr *section_header = &(nm->elf_data.section_headers.elf64[i]);
 
-        // Check sh_offset and sh_size
-        if (section_header->sh_offset + section_header->sh_size >
-            (size_t) nm->mapped_data_info.st_size) {
-            ft_dprintf(STDERR_FILENO, "%s: %s: Invalid sh_offset or sh_size in section header\n",
-                       PROGRAM_NAME, nm->current_filename);
-            return false;
-        }
         if (sh_type == SHT_SYMTAB) {
             if (nm->elf_data.elf_class == ELFCLASS64) {
                 nm->elf_data.symtab_section.elf64 = &(nm->elf_data.section_headers.elf64[i]);

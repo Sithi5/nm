@@ -4,7 +4,7 @@
 VERBOSE=1
 
 # Activate or deactivate tests
-TEST_ALL=0
+TEST_ALL=1
 TEST_ELF64_SYMBOLS_COUNT=0
 TEST_ELF32_SYMBOLS_COUNT=0
 TEST_ELF64=0
@@ -620,7 +620,7 @@ test_errors_file_corrupted()
     test_number=$((test_number + 1))
     sub_test_name="obj2_eshoff2_corrupted_x64"
     prog=./obj/obj2_eshoff2_corrupted_x64.o
-    expected_output="ft_nm: $prog: Invalid sh_offset or sh_size in section header"
+    expected_output="ft_nm: $prog: no symbols"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
 
     test_number=$((test_number + 1))
@@ -642,7 +642,7 @@ test_errors_file_corrupted()
     test_number=$((test_number + 1))
     sub_test_name="obj3_shnum_corrupted_x64"
     prog=./obj/obj3_shnum_corrupted_x64.o
-    expected_output="ft_nm: $prog: Invalid sh_offset or sh_size in section header"
+    expected_output="ft_nm: $prog: e_shnum 250 is corrupted or invalid"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
 
     test_number=$((test_number + 1))
