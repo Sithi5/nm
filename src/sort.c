@@ -22,6 +22,19 @@ void bubble_sort_symbols(t_nm *nm) {
     }
 }
 
+uint64_t get_symbol_address_from_index(t_nm *nm, int index) {
+    uint64_t address;
+
+    address = 0;
+    if (nm->elf_data.elf_class == ELFCLASS64) {
+        address = nm->elf_data.symbols.elf64[index].st_value;
+    } else if (nm->elf_data.elf_class == ELFCLASS32) {
+        address = nm->elf_data.symbols.elf32[index].st_value;
+    }
+
+    return address;   // return 0 for unknown ELF class
+}
+
 /**
  * Returns the index of the pivot element.
  * @param nm
@@ -29,18 +42,29 @@ void bubble_sort_symbols(t_nm *nm) {
  * @param high
  * @return
  */
-static int partition(t_nm *nm, int low, int high) {
+int partition(t_nm *nm, int low, int high) {
     int pivot_index = low + (high - low) / 2;
     const char *pivot = get_symbol_name_from_index(nm, pivot_index);
+    const uint64_t pivot_address = get_symbol_address_from_index(nm, pivot_index);
     int i = low;
     int j = high;
 
     while (i <= j) {
-        while (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) < 0) {
+        while (nm->args.r_flag ? (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) > 0 ||
+                                  (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) == 0 &&
+                                   get_symbol_address_from_index(nm, i) > pivot_address))
+                               : (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) < 0 ||
+                                  (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) == 0 &&
+                                   get_symbol_address_from_index(nm, i) < pivot_address))) {
             i++;
         }
 
-        while (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) > 0) {
+        while (nm->args.r_flag ? (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) < 0 ||
+                                  (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) == 0 &&
+                                   get_symbol_address_from_index(nm, j) < pivot_address))
+                               : (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) > 0 ||
+                                  (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) == 0 &&
+                                   get_symbol_address_from_index(nm, j) > pivot_address))) {
             j--;
         }
 
@@ -59,21 +83,12 @@ static int partition(t_nm *nm, int low, int high) {
  * @param low
  * @param high
  */
-static void quick_sort(t_nm *nm, int low, int high) {
+void quick_sort(t_nm *nm, int low, int high) {
     if (low < high) {
         int partition_index = partition(nm, low, high);
         quick_sort(nm, low, partition_index - 1);
         quick_sort(nm, partition_index, high);
     }
-}
-
-Elf64_Addr get_symbol_address_from_index(t_nm *nm, int index) {
-    if (nm->elf_data.elf_class == ELFCLASS64) {
-        return nm->elf_data.symbols.elf64[index].st_value;
-    } else if (nm->elf_data.elf_class == ELFCLASS32) {
-        return nm->elf_data.symbols.elf32[index].st_value;
-    }
-    return 0;
 }
 
 /**

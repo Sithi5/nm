@@ -7,10 +7,12 @@ VERBOSE=1
 TEST_ALL=0
 TEST_ELF64_SYMBOLS_COUNT=0
 TEST_ELF32_SYMBOLS_COUNT=0
-TEST_ELF64=1
-TEST_ELF32=1
+TEST_ELF64=0
+TEST_ELF32=0
 TEST_ERRORS_MISC=0
 TEST_ERRORS_FILE_TYPE=0
+TEST_ERRORS_FILE_CORRUPTED=0
+TEST_TMP=1
 
 # Colors
 
@@ -94,6 +96,16 @@ compare_ft_nm_error_with_expected_output() {
     fi
 }
 
+
+test_tmp()
+{
+    test_name="TEST_TMP"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
+    test_number=1
+
+    compare_nm_and_ft_nm_output "bin4_x64" $test_number  ./bin/bin4_x64 "-a"
+    test_number=$((test_number + 1))
+}
 
 test_elf64_symbols_count()
 {
@@ -196,7 +208,7 @@ test_errors_misc()
 
     test_number=1
     test_name="test no symbols"
-    prog=./no_symbols
+    prog=./bin/no_symbols
     nm_stderr=$(nm "$prog" 2> nm_stderr.txt)
     ft_nm_stderr=$(./ft_nm "$prog" 2> ft_nm_stderr.txt)
 
@@ -217,6 +229,14 @@ test_errors_misc()
         fi
     fi
     test_number=$((test_number + 1))
+
+    test_name="test stripped files"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
+    prog=./bin/ls
+    expected_output="ft_nm: $prog: no symbols"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
 }
 
 test_errors_file_type()
@@ -232,13 +252,13 @@ test_errors_file_type()
     test_number=$((test_number + 1))
 
     sub_test_name="test not elf files (.c file)"
-    prog=./bin/absolute_value.c
+    prog=./src/absolute_value.c
     expected_output="ft_nm: $prog: Not an ELF file"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
     test_number=$((test_number + 1))
 
     sub_test_name="test not elf files (.a file)"
-    prog=./libft.a
+    prog=./lib/libft.a
     expected_output="ft_nm: $prog: Not an ELF file"
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
     test_number=$((test_number + 1))
@@ -246,6 +266,68 @@ test_errors_file_type()
     sub_test_name="test file doesn't exist"
     prog=./DoesNotExist
     expected_output="ft_nm: $prog: Failed to open file"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+}
+
+test_errors_file_corrupted()
+{
+    test_name="TEST_ERRORS_FILE_CORRUPTED"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
+
+    test_number=1
+    sub_test_name="test obj1_identabi_corrupted_x64"
+    prog=./obj/obj1_identabi_corrupted_x64.o
+    expected_output="ft_nm: $prog: File corrupted."
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identclass_corrupted_x64"
+    prog=./obj/obj1_identclass_corrupted_x64.o
+    expected_output="ft_nm: $prog: File corrupted."
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identclass2_corrupted_x64"
+    prog=./obj/obj1_identclass2_corrupted_x64.o
+    expected_output="ft_nm: $prog: File corrupted."
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identclass3_x32_corrupted_x64"
+    prog=./obj/obj1_identclass3_x32_corrupted_x64.o
+    expected_output="ft_nm: $prog: File corrupted."
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identdata_corrupted_x64"
+    prog=./obj/obj1_identdata_corrupted_x64.o
+    expected_output="ft_nm: $prog: File corrupted."
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identelf_corrupted_x64"
+    prog=./obj/obj1_identelf_corrupted_x64.o
+    expected_output="ft_nm: $prog: File corrupted."
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identelf2_corrupted_x64"
+    prog=./obj/obj1_identelf2_corrupted_x64.o
+    expected_output="ft_nm: $prog: File corrupted."
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identosabi_corrupted_x64"
+    prog=./obj/obj1_identosabi_corrupted_x64.o
+    expected_output="ft_nm: $prog: File corrupted."
     compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
     test_number=$((test_number + 1))
 }
@@ -269,13 +351,37 @@ test_elf64()
     test_name="test_elf64 with -a option"
     echo "\n${_YELLOW}${test_name}:${_END}\n"
     test_number=1
-    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./bin/absolute_value "-a"
+    compare_nm_and_ft_nm_output "absolute_value" $test_number  ./bin/absolute_value "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin1_x64" $test_number  ./bin/bin1_x64 "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin2_x64" $test_number  ./bin/bin2_x64 "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin3_x64" $test_number  ./bin/bin3_x64 "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin4_x64" $test_number  ./bin/bin4_x64 "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin5_x64" $test_number  ./bin/bin5_x64 "-a"
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  ".so file" $test_number ./lib/my_simple_lib.so "-a"
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  ".so file harder" $test_number ./lib/libasan.so "-a"
     test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_output  ".o file" $test_number ./obj/absolute_value.o "-a"
+    compare_nm_and_ft_nm_output "lib1_x64" $test_number  ./lib/lib1_x64.so "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "libft_malloc_aarch64_Linux" $test_number  ./lib/libft_malloc_aarch64_Linux.so "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "absolute_value.o" $test_number ./obj/absolute_value.o "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj1_x64" $test_number ./obj/obj1_x64.o "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj2_x64" $test_number ./obj/obj2_x64.o "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj3_x64" $test_number ./obj/obj3_x64.o "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj4_x64" $test_number ./obj/obj4_x64.o "-a"
+    test_number=$((test_number + 1))
+
 
     test_name="test_elf64 with -g option"
     echo "\n${_YELLOW}${test_name}:${_END}\n"
@@ -331,9 +437,21 @@ test_elf32()
     test_number=1
     compare_nm_and_ft_nm_output "simple binary file" $test_number  ./bin/absolute_value_32 "-a"
     test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin2_x32" $test_number  ./bin/bin2_x32 "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "lib1_x32" $test_number  ./lib/lib1_x32.so "-a"
+    test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  ".so file" $test_number ./lib/my_simple_lib_32.so "-a"
     test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_output  ".o file" $test_number ./obj/absolute_value_32.o "-a"
+    compare_nm_and_ft_nm_output  "absolute_value_32.o" $test_number ./obj/absolute_value_32.o "-a"
+    compare_nm_and_ft_nm_output  "obj1_x32" $test_number ./obj/obj1_x32.o "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj2_x32" $test_number ./obj/obj2_x32.o "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj3_x32" $test_number ./obj/obj3_x32.o "-a"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj4_x32" $test_number ./obj/obj4_x32.o "-a"
+    test_number=$((test_number + 1))
 
     test_name="test_elf32 with -g option"
     echo "\n${_YELLOW}${test_name}:${_END}\n"
@@ -391,6 +509,16 @@ fi
 if [ "$TEST_ERRORS_FILE_TYPE" -eq 1 ] || [ "$TEST_ALL" -eq 1 ]
 then
     test_errors_file_type
+fi
+
+if [ "$TEST_ERRORS_FILE_CORRUPTED" -eq 1 ] || [ "$TEST_ALL" -eq 1 ]
+then
+    test_errors_file_corrupted
+fi
+
+if [ "$TEST_TMP" -eq 1 ] || [ "$TEST_ALL" -eq 1 ]
+then
+    test_tmp
 fi
 
 echo
