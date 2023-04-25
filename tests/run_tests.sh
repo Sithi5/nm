@@ -103,7 +103,7 @@ test_tmp()
     echo "\n\n${_YELLOW}${test_name}:${_END}"
     test_number=1
 
-    compare_nm_and_ft_nm_output "bin4_x64" $test_number  ./bin/bin4_x64 "-a"
+    compare_nm_and_ft_nm_output "bin4_x64" $test_number  ./bin/bin4_x64 "-r"
     test_number=$((test_number + 1))
 }
 

@@ -37,22 +37,30 @@ int partition(t_nm *nm, int low, int high) {
     int j = high;
 
     while (i <= j) {
-        while (nm->args.r_flag ? (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) > 0 ||
-                                  (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) == 0 &&
-                                   get_symbol_address_from_index(nm, i) > pivot_address))
-                               : (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) < 0 ||
-                                  (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) == 0 &&
-                                   get_symbol_address_from_index(nm, i) < pivot_address))) {
-            i++;
-        }
+        if (nm->args.r_flag) {
+            while (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) > 0 ||
+                   (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) == 0 &&
+                    get_symbol_address_from_index(nm, i) < pivot_address)) {
+                i++;
+            }
 
-        while (nm->args.r_flag ? (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) < 0 ||
-                                  (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) == 0 &&
-                                   get_symbol_address_from_index(nm, j) < pivot_address))
-                               : (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) > 0 ||
-                                  (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) == 0 &&
-                                   get_symbol_address_from_index(nm, j) > pivot_address))) {
-            j--;
+            while (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) < 0 ||
+                   (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) == 0 &&
+                    get_symbol_address_from_index(nm, j) > pivot_address)) {
+                j--;
+            }
+        } else {
+            while (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) < 0 ||
+                   (ft_strcmp(get_symbol_name_from_index(nm, i), pivot) == 0 &&
+                    get_symbol_address_from_index(nm, i) < pivot_address)) {
+                i++;
+            }
+
+            while (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) > 0 ||
+                   (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) == 0 &&
+                    get_symbol_address_from_index(nm, j) > pivot_address)) {
+                j--;
+            }
         }
 
         if (i <= j) {
