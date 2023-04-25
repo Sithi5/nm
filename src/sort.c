@@ -43,7 +43,6 @@ int partition(t_nm *nm, int low, int high) {
                     get_symbol_address_from_index(nm, i) < pivot_address)) {
                 i++;
             }
-
             while (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) < 0 ||
                    (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) == 0 &&
                     get_symbol_address_from_index(nm, j) > pivot_address)) {
@@ -55,7 +54,6 @@ int partition(t_nm *nm, int low, int high) {
                     get_symbol_address_from_index(nm, i) < pivot_address)) {
                 i++;
             }
-
             while (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) > 0 ||
                    (ft_strcmp(get_symbol_name_from_index(nm, j), pivot) == 0 &&
                     get_symbol_address_from_index(nm, j) > pivot_address)) {
