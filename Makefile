@@ -70,10 +70,10 @@ endif
 ################################################################################
 
 SRC_NAME			:=	ft_nm.c							\
-						utils.c							\
 						display.c						\
 						structs.c						\
 						elf.c							\
+						check_elf.c						\
 						elfutils.c						\
 						sort.c							\
 						args.c

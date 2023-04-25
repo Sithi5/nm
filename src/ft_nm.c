@@ -25,13 +25,8 @@ void process_file(t_nm *nm) {
         return;
     }
 
-    if (!is_elf_file(nm->mapped_data)) {
-        ft_dprintf(STDERR_FILENO, "%s: %s: Not an ELF file\n", PROGRAM_NAME, nm->current_filename);
-        close(nm->fd);
-        munmap(nm->mapped_data, nm->mapped_data_info.st_size);
+    if (!is_valid_elf_header(nm))
         return;
-    }
-
     process_elf_file(nm);
 
     munmap(nm->mapped_data, nm->mapped_data_info.st_size);

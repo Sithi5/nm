@@ -115,9 +115,6 @@ void parse_args(int argc, char *argv[], t_nm *nm);
 // struct.c
 void set_nm_structure(t_nm *nm);
 
-// utils.c
-bool is_elf_file(unsigned char *file_data);
-
 // elf64.c
 void process_elf_file(t_nm *nm);
 
@@ -135,5 +132,10 @@ uint64_t get_symbol_address_from_index(t_nm *nm, int index);
 // sort.c
 void bubble_sort_symbols(t_nm *nm);
 void quick_sort_symbols(t_nm *nm);
+
+// check_elf.c
+bool is_valid_elf_magic(t_nm *nm);
+bool is_valid_elf_class(t_nm *nm);
+bool is_valid_elf_header(t_nm *nm);
 
 #endif

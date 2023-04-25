@@ -1,17 +1,17 @@
 #!/bin/sh
 
 # Tests configuration
-VERBOSE=0
+VERBOSE=1
 
 # Activate or deactivate tests
-TEST_ALL=1
+TEST_ALL=0
 TEST_ELF64_SYMBOLS_COUNT=0
 TEST_ELF32_SYMBOLS_COUNT=0
 TEST_ELF64=0
 TEST_ELF32=0
 TEST_ERRORS_MISC=0
 TEST_ERRORS_FILE_TYPE=0
-TEST_ERRORS_FILE_CORRUPTED=0
+TEST_ERRORS_FILE_CORRUPTED=1
 TEST_TMP=1
 
 # Colors
@@ -24,6 +24,8 @@ _END=`tput sgr0`
 
 # echo filename
 echo "\n\n\n\n${_PURPLE}$0 :${_END}\n"
+
+
 
 compare_nm_and_ft_nm_symbols_count() {
     test_name=$1
@@ -96,15 +98,11 @@ compare_ft_nm_error_with_expected_output() {
     fi
 }
 
-
 test_tmp()
 {
     test_name="TEST_TMP"
     echo "\n\n${_YELLOW}${test_name}:${_END}"
     test_number=1
-
-    compare_nm_and_ft_nm_output "bin4_x64" $test_number  ./bin/bin4_x64 "-r"
-    test_number=$((test_number + 1))
 }
 
 test_elf64_symbols_count()
@@ -270,67 +268,6 @@ test_errors_file_type()
     test_number=$((test_number + 1))
 }
 
-test_errors_file_corrupted()
-{
-    test_name="TEST_ERRORS_FILE_CORRUPTED"
-    echo "\n\n${_YELLOW}${test_name}:${_END}"
-
-    test_number=1
-    sub_test_name="test obj1_identabi_corrupted_x64"
-    prog=./obj/obj1_identabi_corrupted_x64.o
-    expected_output="ft_nm: $prog: File corrupted."
-    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
-
-    test_number=$((test_number + 1))
-    sub_test_name="obj1_identclass_corrupted_x64"
-    prog=./obj/obj1_identclass_corrupted_x64.o
-    expected_output="ft_nm: $prog: File corrupted."
-    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
-
-    test_number=$((test_number + 1))
-    sub_test_name="obj1_identclass2_corrupted_x64"
-    prog=./obj/obj1_identclass2_corrupted_x64.o
-    expected_output="ft_nm: $prog: File corrupted."
-    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
-
-    test_number=$((test_number + 1))
-    sub_test_name="obj1_identclass3_x32_corrupted_x64"
-    prog=./obj/obj1_identclass3_x32_corrupted_x64.o
-    expected_output="ft_nm: $prog: File corrupted."
-    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
-
-    test_number=$((test_number + 1))
-    sub_test_name="obj1_identdata_corrupted_x64"
-    prog=./obj/obj1_identdata_corrupted_x64.o
-    expected_output="ft_nm: $prog: File corrupted."
-    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
-
-    test_number=$((test_number + 1))
-    sub_test_name="obj1_identelf_corrupted_x64"
-    prog=./obj/obj1_identelf_corrupted_x64.o
-    expected_output="ft_nm: $prog: File corrupted."
-    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
-
-    test_number=$((test_number + 1))
-    sub_test_name="obj1_identelf2_corrupted_x64"
-    prog=./obj/obj1_identelf2_corrupted_x64.o
-    expected_output="ft_nm: $prog: File corrupted."
-    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
-
-    test_number=$((test_number + 1))
-    sub_test_name="obj1_identosabi_corrupted_x64"
-    prog=./obj/obj1_identosabi_corrupted_x64.o
-    expected_output="ft_nm: $prog: File corrupted."
-    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
-    test_number=$((test_number + 1))
-}
 
 test_elf64()
 {
@@ -601,6 +538,68 @@ test_elf32()
     compare_nm_and_ft_nm_output  "obj3_x32" $test_number ./obj/obj3_x32.o "-a -r"
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  "obj4_x32" $test_number ./obj/obj4_x32.o "-a -r"
+    test_number=$((test_number + 1))
+}
+
+
+test_errors_file_corrupted()
+{
+    test_name="TEST_ERRORS_FILE_CORRUPTED"
+    echo "\n\n${_YELLOW}${test_name}:${_END}"
+
+    test_number=1
+    sub_test_name="test obj1_identabi_corrupted_x64"
+    prog=./obj/obj1_identabi_corrupted_x64.o
+    compare_nm_and_ft_nm_output "test obj1_identabi_corrupted_x64" $test_number "./obj/obj1_identabi_corrupted_x64.o" "-g"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identclass_corrupted_x64"
+    prog=./obj/obj1_identclass_corrupted_x64.o
+    expected_output="ft_nm: $prog: Unsupported ELF file class"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identclass2_corrupted_x64"
+    prog=./obj/obj1_identclass2_corrupted_x64.o
+    expected_output="ft_nm: $prog: Unsupported ELF file class"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identclass3_x32_corrupted_x64"
+    prog=./obj/obj1_identclass3_x32_corrupted_x64.o
+    expected_output="ft_nm: $prog: no symbols"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identdata_corrupted_x64"
+    prog=./obj/obj1_identdata_corrupted_x64.o
+    expected_output="ft_nm: $prog: Unsupported ELF file data encoding"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identelf_corrupted_x64"
+    prog=./obj/obj1_identelf_corrupted_x64.o
+    expected_output="ft_nm: $prog: Not an ELF file"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identelf2_corrupted_x64"
+    prog=./obj/obj1_identelf2_corrupted_x64.o
+    expected_output="ft_nm: $prog: Not an ELF file"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
+    test_number=$((test_number + 1))
+
+    test_number=$((test_number + 1))
+    sub_test_name="obj1_identosabi_corrupted_x64"
+    prog=./obj/obj1_identosabi_corrupted_x64.o
+    expected_output="ft_nm: $prog: Unsupported ELF file OS ABI"
+    compare_ft_nm_error_with_expected_output "$sub_test_name" $test_number "$prog" "$expected_output"
     test_number=$((test_number + 1))
 }
 
