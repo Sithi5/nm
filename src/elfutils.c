@@ -1,5 +1,18 @@
 #include "ft_nm.h"
 
+uint64_t get_symbol_address_from_index(t_nm *nm, int index) {
+    uint64_t address;
+
+    address = 0;
+    if (nm->elf_data.elf_class == ELFCLASS64) {
+        address = nm->elf_data.symbols.elf64[index].st_value;
+    } else if (nm->elf_data.elf_class == ELFCLASS32) {
+        address = nm->elf_data.symbols.elf32[index].st_value;
+    }
+
+    return address;   // return 0 for unknown ELF class
+}
+
 char *get_symbol_name_from_index(t_nm *nm, size_t symbol_index) {
     size_t shndx;
     Elf64_Shdr *shdr64;
@@ -47,9 +60,11 @@ bool should_display_symbol(t_nm *nm) {
         return false;
     }
 
-    DEBUG ? ft_printf("DEBUG: symbol (name=%s, type=%u, bind=%u, shndx=%u, symbol_type_char=%c)\t",
+    DEBUG ? ft_printf("DEBUG: symbol (name=%s, type=%u, bind=%u, shndx=%u, symbol_type_char=%c, "
+                      "symbol_addr=%li)\t",
                       nm->elf_data.current_symbol_name, type, bind, shndx,
-                      get_current_symbol_type_char(nm))
+                      get_current_symbol_type_char(nm),
+                      get_symbol_address_from_index(nm, nm->elf_data.current_symbol_index))
           : 0;
     // Skip compiler generated symbols
     if (ft_strncmp(nm->elf_data.current_symbol_name, "$", 1) == 0 ||
@@ -162,7 +177,7 @@ char get_current_symbol_type_char(t_nm *nm) {
     if (bind == STB_WEAK) {
 
         if (symbol_type == STT_OBJECT) {
-            symbol_char = 'v';   // Weak symbol with a weak object specified
+            symbol_char = 'V';   // Weak symbol with a weak object specified
         } else {
             symbol_char = 'W';   // Weak symbol not specifically tagged as a weak object
         }

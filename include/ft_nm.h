@@ -83,6 +83,7 @@ typedef struct s_elf_data {
     t_symbol symbols;
     t_symbol current_symbol;
     char *current_symbol_name;
+    int current_symbol_index;
     t_elf_class elf_class;
 } t_elf_data;
 
@@ -129,6 +130,7 @@ bool should_display_symbol(t_nm *nm);
 void swap_symbols_index(t_nm *nm, size_t symbol_index_1, size_t symbol_index_2);
 char *get_symbol_name_in_strtab_section(t_nm *nm, t_symbol symbol);
 char *get_symbol_name_from_index(t_nm *nm, size_t symbol_index);
+uint64_t get_symbol_address_from_index(t_nm *nm, int index);
 
 // sort.c
 void bubble_sort_symbols(t_nm *nm);

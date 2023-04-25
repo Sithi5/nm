@@ -22,19 +22,6 @@ void bubble_sort_symbols(t_nm *nm) {
     }
 }
 
-uint64_t get_symbol_address_from_index(t_nm *nm, int index) {
-    uint64_t address;
-
-    address = 0;
-    if (nm->elf_data.elf_class == ELFCLASS64) {
-        address = nm->elf_data.symbols.elf64[index].st_value;
-    } else if (nm->elf_data.elf_class == ELFCLASS32) {
-        address = nm->elf_data.symbols.elf32[index].st_value;
-    }
-
-    return address;   // return 0 for unknown ELF class
-}
-
 /**
  * Returns the index of the pivot element.
  * @param nm
