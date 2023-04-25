@@ -109,7 +109,7 @@ char get_current_symbol_type_char(t_nm *nm) {
         bind = ELF32_ST_BIND(nm->elf_data.current_symbol.elf32->st_info);
         symbol_type = ELF32_ST_TYPE(nm->elf_data.current_symbol.elf32->st_info);
         shndx = nm->elf_data.current_symbol.elf32->st_shndx;
-        section_header = &nm->elf_data.section_headers.elf32[shndx];
+        section_header = (Elf64_Shdr *) &nm->elf_data.section_headers.elf32[shndx];
     }
 
     if (shndx == SHN_UNDEF) {
@@ -127,13 +127,12 @@ char get_current_symbol_type_char(t_nm *nm) {
             case SHT_PROGBITS:
                 if (section_header->sh_flags & SHF_WRITE) {
                     symbol_char = 'D';
-                } else if (section_header->sh_flags &
-                           SHF_EXECINSTR) {   // Executable, so probably text section
+                } else if (section_header->sh_flags & SHF_EXECINSTR) {
                     symbol_char = 'T';
-                } else if (section_header->sh_flags & SHF_ALLOC) {   // Read-only at runtime
+                } else if (section_header->sh_flags & SHF_ALLOC) {
                     symbol_char = 'R';
                 } else {
-                    symbol_char = 'n';   // read-only not at runtime
+                    symbol_char = 'n';
                 }
                 break;
             case SHT_INIT_ARRAY:   // Part of initialized data section
@@ -153,7 +152,7 @@ char get_current_symbol_type_char(t_nm *nm) {
                     !(section_header->sh_flags & SHF_EXECINSTR)) {
                     symbol_char = 'R';
                 } else {
-                    symbol_char = '?';
+                    symbol_char = 'n';
                 }
                 break;
             }
