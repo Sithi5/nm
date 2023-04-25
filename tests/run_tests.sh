@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # Tests configuration
-VERBOSE=1
+VERBOSE=0
 
 # Activate or deactivate tests
-TEST_ALL=0
+TEST_ALL=1
 TEST_ELF64_SYMBOLS_COUNT=0
 TEST_ELF32_SYMBOLS_COUNT=0
 TEST_ELF64=0
@@ -382,39 +382,141 @@ test_elf64()
     compare_nm_and_ft_nm_output  "obj4_x64" $test_number ./obj/obj4_x64.o "-a"
     test_number=$((test_number + 1))
 
-
     test_name="test_elf64 with -g option"
     echo "\n${_YELLOW}${test_name}:${_END}\n"
     test_number=1
-    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./bin/absolute_value "-g"
+    compare_nm_and_ft_nm_output "absolute_value" $test_number  ./bin/absolute_value "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin1_x64" $test_number  ./bin/bin1_x64 "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin2_x64" $test_number  ./bin/bin2_x64 "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin3_x64" $test_number  ./bin/bin3_x64 "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin4_x64" $test_number  ./bin/bin4_x64 "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin5_x64" $test_number  ./bin/bin5_x64 "-g"
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  ".so file" $test_number ./lib/my_simple_lib.so "-g"
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  ".so file harder" $test_number ./lib/libasan.so "-g"
     test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_output  ".o file" $test_number ./obj/absolute_value.o "-g"
+    compare_nm_and_ft_nm_output "lib1_x64" $test_number  ./lib/lib1_x64.so "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "libft_malloc_aarch64_Linux" $test_number  ./lib/libft_malloc_aarch64_Linux.so "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "absolute_value.o" $test_number ./obj/absolute_value.o "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj1_x64" $test_number ./obj/obj1_x64.o "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj2_x64" $test_number ./obj/obj2_x64.o "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj3_x64" $test_number ./obj/obj3_x64.o "-g"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj4_x64" $test_number ./obj/obj4_x64.o "-g"
+    test_number=$((test_number + 1))
 
     test_name="test_elf64 with -u option"
     echo "\n${_YELLOW}${test_name}:${_END}\n"
     test_number=1
-    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./bin/absolute_value "-u"
+    compare_nm_and_ft_nm_output "absolute_value" $test_number  ./bin/absolute_value "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin1_x64" $test_number  ./bin/bin1_x64 "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin2_x64" $test_number  ./bin/bin2_x64 "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin3_x64" $test_number  ./bin/bin3_x64 "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin4_x64" $test_number  ./bin/bin4_x64 "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin5_x64" $test_number  ./bin/bin5_x64 "-u"
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  ".so file" $test_number ./lib/my_simple_lib.so "-u"
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  ".so file harder" $test_number ./lib/libasan.so "-u"
     test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_output  ".o file" $test_number ./obj/absolute_value.o "-u"
+    compare_nm_and_ft_nm_output "lib1_x64" $test_number  ./lib/lib1_x64.so "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "libft_malloc_aarch64_Linux" $test_number  ./lib/libft_malloc_aarch64_Linux.so "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "absolute_value.o" $test_number ./obj/absolute_value.o "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj1_x64" $test_number ./obj/obj1_x64.o "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj2_x64" $test_number ./obj/obj2_x64.o "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj3_x64" $test_number ./obj/obj3_x64.o "-u"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj4_x64" $test_number ./obj/obj4_x64.o "-u"
+    test_number=$((test_number + 1))
 
     test_name="test_elf64 with -p option"
     echo "\n${_YELLOW}${test_name}:${_END}\n"
     test_number=1
-    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./bin/absolute_value "-p"
+    compare_nm_and_ft_nm_output "absolute_value" $test_number  ./bin/absolute_value "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin1_x64" $test_number  ./bin/bin1_x64 "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin2_x64" $test_number  ./bin/bin2_x64 "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin3_x64" $test_number  ./bin/bin3_x64 "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin4_x64" $test_number  ./bin/bin4_x64 "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin5_x64" $test_number  ./bin/bin5_x64 "-p"
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  ".so file" $test_number ./lib/my_simple_lib.so "-p"
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  ".so file harder" $test_number ./lib/libasan.so "-p"
     test_number=$((test_number + 1))
-    compare_nm_and_ft_nm_output  ".o file" $test_number ./obj/absolute_value.o "-p"
+    compare_nm_and_ft_nm_output "lib1_x64" $test_number  ./lib/lib1_x64.so "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "libft_malloc_aarch64_Linux" $test_number  ./lib/libft_malloc_aarch64_Linux.so "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "absolute_value.o" $test_number ./obj/absolute_value.o "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj1_x64" $test_number ./obj/obj1_x64.o "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj2_x64" $test_number ./obj/obj2_x64.o "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj3_x64" $test_number ./obj/obj3_x64.o "-p"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj4_x64" $test_number ./obj/obj4_x64.o "-p"
+    test_number=$((test_number + 1))
+
+    test_name="test_elf64 with -r option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "absolute_value" $test_number  ./bin/absolute_value "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin1_x64" $test_number  ./bin/bin1_x64 "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin2_x64" $test_number  ./bin/bin2_x64 "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin3_x64" $test_number  ./bin/bin3_x64 "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin4_x64" $test_number  ./bin/bin4_x64 "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin5_x64" $test_number  ./bin/bin5_x64 "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./lib/my_simple_lib.so "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file harder" $test_number ./lib/libasan.so "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "lib1_x64" $test_number  ./lib/lib1_x64.so "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "libft_malloc_aarch64_Linux" $test_number  ./lib/libft_malloc_aarch64_Linux.so "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "absolute_value.o" $test_number ./obj/absolute_value.o "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj1_x64" $test_number ./obj/obj1_x64.o "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj2_x64" $test_number ./obj/obj2_x64.o "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj3_x64" $test_number ./obj/obj3_x64.o "-r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj4_x64" $test_number ./obj/obj4_x64.o "-r"
+    test_number=$((test_number + 1))
 }
 
 
@@ -479,6 +581,27 @@ test_elf32()
     compare_nm_and_ft_nm_output  ".so file" $test_number ./lib/my_simple_lib_32.so "-p"
     test_number=$((test_number + 1))
     compare_nm_and_ft_nm_output  ".o file" $test_number ./obj/absolute_value_32.o "-p"
+
+    test_name="test_elf32 with -a and -r option"
+    echo "\n${_YELLOW}${test_name}:${_END}\n"
+    test_number=1
+    compare_nm_and_ft_nm_output "simple binary file" $test_number  ./bin/absolute_value_32 "-a -r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "bin2_x32" $test_number  ./bin/bin2_x32 "-a -r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output "lib1_x32" $test_number  ./lib/lib1_x32.so "-a -r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  ".so file" $test_number ./lib/my_simple_lib_32.so "-a -r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "absolute_value_32.o" $test_number ./obj/absolute_value_32.o "-a -r"
+    compare_nm_and_ft_nm_output  "obj1_x32" $test_number ./obj/obj1_x32.o "-a -r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj2_x32" $test_number ./obj/obj2_x32.o "-a -r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj3_x32" $test_number ./obj/obj3_x32.o "-a -r"
+    test_number=$((test_number + 1))
+    compare_nm_and_ft_nm_output  "obj4_x32" $test_number ./obj/obj4_x32.o "-a -r"
+    test_number=$((test_number + 1))
 }
 
 if [ $TEST_ELF64_SYMBOLS_COUNT -eq 1 ]|| [ "$TEST_ALL" -eq 1 ]
