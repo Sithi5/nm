@@ -66,3 +66,4 @@ todo*
 tests/*.out
 tests/*.txt
 !tests/*.so
+!tests/lib/*.so

@@ -15,7 +15,7 @@ static void usage() {
     exit(1);
 }
 
-static void add_file(const char *filename, t_nm *nm) {
+static void add_file(char *filename, t_nm *nm) {
     if (nm->file_count >= MAX_FILES) {
         ft_dprintf(STDERR_FILENO, "%s: %s: Too many files, maximum allowed is %d\n", PROGRAM_NAME,
                    nm->current_filename, MAX_FILES);
