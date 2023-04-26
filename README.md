@@ -1,13 +1,80 @@
 # nm
 
+`nm` is a command-line utility that displays the symbol table of an ELF (Executable and Linkable Format) file. It provides information about the symbols used by a program, such as functions, variables, and other objects. This tool can be useful for debugging, understanding the inner workings of a program, or analyzing the performance of a compiled binary.
+
 ## Features
+
+- Displays the symbol table of ELF files
+- Supports various output formats for easy parsing and analysis
+- Can filter symbols based on their type, binding, or visibility
+- Allows for demangling of C++ symbol names
 
 ## Requirements
 
 Unix-like operating system (tested on macOS and Ubuntu)
 C compiler (tested with gcc)
 
+## Installation
+
+Follow the steps below to install the nm project:
+
+1. Clone the repository:
+
+```bash
+git clone --recursive https://github.com/sithi5/nm.git
+```
+
+> "Note: The --recursive flag is necessary to initialize and fetch the submodule(s) within the project."
+
+2. Change to the project directory:
+
+```bash
+cd ft_nm
+```
+
+3. Compile the project using the provided Makefile:
+
+```bash
+make
+```
+
+4. (Optional) Adjust the compilation flags in the Makefile if needed. The available options are:
+   WALL: Enable all warning flags
+   WEXTRA: Enable extra warning flags
+   WSHADOW: Enable warning flags for shadowing
+   WERROR: Treat warnings as errors
+   FSANITIZE: Enable address sanitizer
+   DEBUG: Enable debug mode
+   O2: Enable level 2 optimization
+   To enable or disable an option, set the corresponding variable to "yes" or "no" in the Makefile. For example, to enable level 2 optimization, set O2 = yes.
+
+There is additional Makefile rules:
+
+| rules           | Description                                                                                                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| all             | This rule (default) compiles the project and generates the binary. It is run when you execute make without specifying a target.                                          |
+| tests           | This rule runs the project's test suite. After the project has been built, execute make tests to launch the test scripts.                                                |
+| clean           | This rule removes the generated object files and other temporary files created during compilation. Use make clean to clean up these files.                               |
+| fclean          | This rule runs clean and also removes the generated binary. Use make fclean to completely clean up the project, including the binary.                                    |
+| re              | This rule runs fclean followed by all, effectively rebuilding the project from scratch. Use make re if you want to recompile the entire project and submodule.           |
+| re-no-submodule | This rule is similar to re, but it does not rebuild the submodule(s). Use make re-no-submodule if you want to recompile the project without rebuilding the submodule(s). |
+| help            | This rule displays helpful information about the Makefile and its targets. Use make help to show a brief description of each rule.                                       |
+| docker-build    | This rule builds a Docker image for the project. Use make docker-build to create a Docker image with the specified configuration in the Dockerfile.                      |
+| docker-run      | This rule creates and runs a Docker container from the built image. Use make docker-run to start a Docker container with the project.                                    |
+| docker-exec     | This rule allows you to execute commands inside the running Docker container. Use make docker-exec to open an interactive shell inside the container.                    |
+| docker-start    | This rule starts an existing Docker container. Use make docker-start to restart a stopped container.                                                                     |
+
 ## Options
+
+| Option               | Description                                                          |
+| -------------------- | -------------------------------------------------------------------- |
+| -a, --all            | Display all symbols, including those that are not externally visible |
+| -d, --dynamic        | Display only dynamic symbols                                         |
+| -g, --extern-only    | Display only external symbols                                        |
+| -p, --no-sort        | Do not sort the symbols (default is to sort alphabetically)          |
+| -r, --reverse-sort   | Reverse the order of the sort                                        |
+| -u, --undefined-only | Display only undefined symbols                                       |
+| --help               | Display help information and exit                                    |
 
 ## Usefull definition
 
